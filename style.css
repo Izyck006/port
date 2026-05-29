@@ -279,6 +279,19 @@ footer {
     font-family: 'Syncopate', sans-serif;
 }
 
+
+.skill-card.ai-card {
+    position: relative;
+    border: 1px solid rgba(138, 43, 226, 0.3); 
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.05);
+}
+
+.skill-card.ai-card:hover {
+    border-color: rgba(138, 43, 226, 0.8);
+    box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+    transform: translateY(-10px);
+}
+
 @media (max-width: 768px) {
     header h1 {
         font-size: 2.2rem;
