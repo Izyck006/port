@@ -110,7 +110,6 @@ header h1 {
     color: #fff;
     margin-bottom: 1.5rem;
     letter-spacing: 2px;
-    margin-right: -24px;
 }
 
 .description {
@@ -207,7 +206,6 @@ header h1 {
     color: #777;
 }
 
-/* Projects Grid */
 .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
