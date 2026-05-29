@@ -110,6 +110,7 @@ header h1 {
     color: #fff;
     margin-bottom: 1.5rem;
     letter-spacing: 2px;
+    margin-right: -24px;
 }
 
 .description {
@@ -278,4 +279,17 @@ footer {
     color: #555;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     font-family: 'Syncopate', sans-serif;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2.2rem;
+        letter-spacing: 12px;
+        margin-right: -12px;
+    }
+    
+    .glow-orb {
+        width: 200px;
+        height: 200px;
+    }
 }
