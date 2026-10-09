@@ -115,7 +115,7 @@ function App() {
       {/* Navigation */}
       <nav className="glass-nav">
         <div className="nav-content">
-          <div className="logo">ZICRON.</div>
+          <div className="logo">ISAAC.</div>
           <ul className="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -135,7 +135,7 @@ function App() {
           variants={fadeUp}
         >
           <p className="subtitle">SOFTWARE ENGINEER</p>
-          <h1>ZICRON</h1>
+          <h1>ISAAC</h1>
           <p className="description">
             Bridging the gap between edge-computing AI, coding, Web3 communities, and cinematic design.
           </p>
@@ -409,7 +409,7 @@ function App() {
       </section>
 
       <footer className="glass-nav relative z-10">
-        <p>&copy; {new Date().getFullYear()} ZICRON. All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()} ISAAC. All Rights Reserved.</p>
         <p className="footer-sub">Engineered with React, Framer Motion & GitHub API</p>
       </footer>
     </div>
