@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Download, ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, X, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ContributionSkyline from './components/ui/contribution-skyline';
 import './index.css';
 import './App.css';
 
 function App() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [contributions, setContributions] = useState([]);
   
   // Contact form state
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -28,7 +30,31 @@ function App() {
         setLoading(false);
       }
     };
+
+    const fetchContributions = async () => {
+      try {
+        const response = await fetch(`https://api.github.com/users/${githubUsername}/events?per_page=100`);
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          const counts = {};
+          data.forEach(event => {
+            const date = event.created_at.split('T')[0];
+            counts[date] = (counts[date] || 0) + 1;
+          });
+          const mappedData = Object.keys(counts).map(date => ({
+            date,
+            count: counts[date]
+          }));
+          setContributions(mappedData);
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        setContributions([]); // fallback
+      }
+    };
+
     fetchRepos();
+    fetchContributions();
   }, []);
 
   const handleContactSubmit = (e) => {
@@ -227,6 +253,18 @@ function App() {
               )}
             </motion.div>
           )}
+        </div>
+
+        {/* Contribution Skyline */}
+        <div className="skyline-section mt-50">
+          <h3 className="sub-section-title"><Terminal size={24} className="inline-icon" /> Activity Skyline</h3>
+          <div className="glass p-2 sm:p-4 rounded-xl overflow-hidden w-full mx-auto max-w-[1100px] bg-black/40">
+             {contributions.length > 0 ? (
+                <ContributionSkyline data={contributions} />
+             ) : (
+                <div className="text-center py-10 text-muted-foreground">Loading activity...</div>
+             )}
+          </div>
         </div>
 
         {/* Static Handpicked Projects */}

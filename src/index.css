@@ -1,15 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap');
 
-:root {
-  --accent-gold: #ffcc00;
-  --accent-blue: #3498db;
-  --accent-purple: #8a2be2;
-  --bg-dark: #050505;
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --card-border: rgba(255, 255, 255, 0.08);
-  --glass-bg: rgba(5, 5, 5, 0.7);
-  --text-main: #e0e0e0;
-  --text-muted: #888;
+@layer base {
+  :root {
+    --accent-gold: #ffcc00;
+    --accent-blue: #3498db;
+    --accent-purple: #8a2be2;
+    --bg-dark: #050505;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --glass-bg: rgba(5, 5, 5, 0.7);
+    --text-main: #e0e0e0;
+    --text-muted: #888;
+
+    /* Shadcn UI required vars for the skyline */
+    --background: #050505;
+    --foreground: #e0e0e0;
+    --border: rgba(255, 255, 255, 0.08);
+    --muted: rgba(255, 255, 255, 0.03);
+    --muted-foreground: #888;
+  }
 }
 
 * {
