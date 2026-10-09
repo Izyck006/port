@@ -7,7 +7,6 @@ import './App.css';
 function App() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
   
   // Contact form state
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -93,9 +92,6 @@ function App() {
           </p>
           <div className="btn-group">
             <a href="#projects" className="btn primary">View My Work</a>
-            <button onClick={() => setIsResumeOpen(true)} className="btn accent">
-              <Download size={18} /> Resume
-            </button>
           </div>
         </motion.div>
       </header>
@@ -354,46 +350,6 @@ function App() {
           </motion.div>
         </div>
       </section>
-
-      {/* Resume Modal */}
-      <AnimatePresence>
-        {isResumeOpen && (
-          <motion.div 
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsResumeOpen(false)}
-          >
-            <motion.div 
-              className="modal-content glass"
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button className="close-btn" onClick={() => setIsResumeOpen(false)}>
-                <X size={24} />
-              </button>
-              <h2>My Resume</h2>
-              <div className="resume-preview">
-                <p>ZICRON - Software Engineer</p>
-                <ul>
-                  <li>React, Spring Boot, Python</li>
-                  <li>Edge-Computing & Computer Vision</li>
-                  <li>UI/UX Design & Web3 Community Management</li>
-                </ul>
-              </div>
-              <div className="modal-actions">
-                {/* Normally this would link to an actual PDF */}
-                <a href="#" onClick={(e) => { e.preventDefault(); alert("Downloading PDF..."); }} className="btn primary">
-                  <Download size={18} /> Download PDF
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <footer className="glass-nav relative z-10">
         <p>&copy; {new Date().getFullYear()} ZICRON. All Rights Reserved.</p>
