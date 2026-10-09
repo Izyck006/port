@@ -6,9 +6,9 @@ import './index.css';
 import './App.css';
 
 function App() {
-  const [repos, setRepos] = useState([]);
+  const [repos, setRepos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [contributions, setContributions] = useState([]);
+  const [contributions, setContributions] = useState<{ date: string; count: number }[]>([]);
   
   // Contact form state
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -36,8 +36,8 @@ function App() {
         const response = await fetch(`https://api.github.com/users/${githubUsername}/events?per_page=100`);
         const data = await response.json();
         if (Array.isArray(data)) {
-          const counts = {};
-          data.forEach(event => {
+          const counts: Record<string, number> = {};
+          data.forEach((event: any) => {
             const date = event.created_at.split('T')[0];
             counts[date] = (counts[date] || 0) + 1;
           });
@@ -57,7 +57,7 @@ function App() {
     fetchContributions();
   }, []);
 
-  const handleContactSubmit = (e) => {
+  const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
     // Simulate network request
