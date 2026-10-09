@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Download, ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone } from 'lucide-react';
+import { Download, ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, X, Send } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
 import './App.css';
 
 function App() {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
+  
+  // Contact form state
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formStatus, setFormStatus] = useState(''); // '', 'sending', 'sent'
 
   // GitHub Username from User
   const githubUsername = 'Izyck006';
@@ -25,6 +31,31 @@ function App() {
     };
     fetchRepos();
   }, []);
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    setFormStatus('sending');
+    // Simulate network request
+    setTimeout(() => {
+      setFormStatus('sent');
+      setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => setFormStatus(''), 3000);
+    }, 1500);
+  };
+
+  // Animation variants
+  const fadeUp = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
 
   return (
     <div className="app-container">
@@ -49,7 +80,12 @@ function App() {
 
       {/* Hero Section */}
       <header id="home" className="relative z-10">
-        <div className="hero-content glass">
+        <motion.div 
+          className="hero-content glass"
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+        >
           <p className="subtitle">SOFTWARE ENGINEER</p>
           <h1>ZICRON</h1>
           <p className="description">
@@ -57,18 +93,32 @@ function App() {
           </p>
           <div className="btn-group">
             <a href="#projects" className="btn primary">View My Work</a>
-            <button onClick={() => alert("Resume coming soon!")} className="btn accent">
-              <Download size={18} /> Download CV
+            <button onClick={() => setIsResumeOpen(true)} className="btn accent">
+              <Download size={18} /> Resume
             </button>
           </div>
-        </div>
+        </motion.div>
       </header>
 
       {/* About Section */}
       <section id="about" className="relative z-10">
-        <h2 className="section-title">The Blueprint</h2>
+        <motion.h2 
+          className="section-title"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.8 }}
+          variants={fadeUp}
+        >
+          The Blueprint
+        </motion.h2>
         <div className="about-grid">
-          <div className="about-text glass">
+          <motion.div 
+            className="about-text glass"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.8 }}
+            variants={fadeUp}
+          >
             <p>
               Currently engineering software at Federal University of Dutse (FUD). I don't just write code; I build ecosystems. 
               Whether I'm deploying React-based computer vision dashboards, tutoring the next generation of devs in HTML/CSS, 
@@ -77,45 +127,77 @@ function App() {
             <p>
               When I'm not locking in on data structures or operating systems, I'm designing streetwear campaigns, crafting logos with cinematic lighting.
             </p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Skills Section */}
       <section id="skills" className="relative z-10">
-        <h2 className="section-title">The Arsenal</h2>
-        <div className="skills-container">
+        <motion.h2 
+          className="section-title"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.8 }}
+          variants={fadeUp}
+        >
+          The Arsenal
+        </motion.h2>
+        <motion.div 
+          className="skills-container"
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
           
-          <div className="skill-card glass ai-card">
+          <motion.div variants={fadeUp} className="skill-card glass ai-card">
             <div className="skill-icon"><Terminal size={32} color="#3498db" /></div>
             <h3>Engineering & AI</h3>
-            <p><strong>Stack:</strong> Python (PyTorch/OpenCV), Spring Boot, React</p>
-            <div className="skill-tag">Edge-Computing</div>
-            <div className="skill-tag">Computer Vision</div>
-          </div>
+            <p>Building intelligent systems and responsive frontends.</p>
+            <div className="skill-tags">
+              <span className="skill-tag"><Code size={12} className="mr-1"/> Python</span>
+              <span className="skill-tag"><Code size={12} className="mr-1"/> React</span>
+              <span className="skill-tag"><Database size={12} className="mr-1"/> Spring Boot</span>
+              <span className="skill-tag"><Terminal size={12} className="mr-1"/> OpenCV</span>
+            </div>
+          </motion.div>
 
-          <div className="skill-card glass">
+          <motion.div variants={fadeUp} className="skill-card glass">
             <div className="skill-icon"><Palette size={32} color="#ffcc00" /></div>
             <h3>Design</h3>
-            <p>Cinematic Lighting, Logo Systems, Streetwear Aesthetics</p>
-            <div className="skill-tag">Photoshop</div>
-            <div className="skill-tag">Canva</div>
-          </div>
+            <p>Cinematic Lighting, Logo Systems, Streetwear Aesthetics.</p>
+            <div className="skill-tags">
+              <span className="skill-tag">Photoshop</span>
+              <span className="skill-tag">Canva</span>
+              <span className="skill-tag">UI/UX</span>
+            </div>
+          </motion.div>
 
-          <div className="skill-card glass">
+          <motion.div variants={fadeUp} className="skill-card glass">
             <div className="skill-icon"><Shield size={32} color="#8a2be2" /></div>
             <h3>Web3</h3>
-            <p>Community Management, Pro-Shilling, Project Moderation</p>
-            <div className="skill-tag">Moderation</div>
-            <div className="skill-tag">Community</div>
-          </div>
+            <p>Community Management, Pro-Shilling, Project Moderation.</p>
+            <div className="skill-tags">
+              <span className="skill-tag">Moderation</span>
+              <span className="skill-tag">Community</span>
+              <span className="skill-tag">Discord</span>
+            </div>
+          </motion.div>
 
-        </div>
+        </motion.div>
       </section>
 
       {/* Projects Section */}
       <section id="projects" className="relative z-10">
-        <h2 className="section-title">Recent Drops</h2>
+        <motion.h2 
+          className="section-title"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.8 }}
+          variants={fadeUp}
+        >
+          Recent Drops
+        </motion.h2>
         
         {/* Dynamic GitHub Projects */}
         <div className="github-section">
@@ -123,9 +205,15 @@ function App() {
           {loading ? (
             <div className="loading-spinner">Loading repos...</div>
           ) : (
-            <div className="project-grid">
+            <motion.div 
+              className="project-grid"
+              variants={staggerContainer}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+            >
               {repos.length > 0 ? repos.map(repo => (
-                <div key={repo.id} className="project-card glass">
+                <motion.div variants={fadeUp} key={repo.id} className="project-card glass">
                   <div className="project-info">
                     <h3>{repo.name}</h3>
                     <p className="repo-desc">{repo.description || "No description provided."}</p>
@@ -137,68 +225,179 @@ function App() {
                       View Code <ExternalLink size={14} />
                     </a>
                   </div>
-                </div>
+                </motion.div>
               )) : (
                 <p>No repositories found.</p>
               )}
-            </div>
+            </motion.div>
           )}
         </div>
 
         {/* Static Handpicked Projects */}
         <div className="handpicked-section mt-50">
           <h3 className="sub-section-title">Handpicked Masterpieces</h3>
-          <div className="project-grid">
-            <div className="project-card glass">
+          <motion.div 
+            className="project-grid"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
+          >
+            <motion.div variants={fadeUp} className="project-card glass">
               <div className="project-img placeholder-1"></div>
               <div className="project-info">
                 <h3>Livestock Deterrence AI</h3>
                 <p>An edge-computing AI pipeline for farmland protection in Rural Jigawa, featuring real-time computer vision synced to a React web dashboard.</p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="project-card glass">
+            <motion.div variants={fadeUp} className="project-card glass">
               <div className="project-img placeholder-4"></div>
               <div className="project-info">
                 <h3>Prompt Engineering</h3>
                 <p>LLM Orchestration, Image Gen, Context Optimization, Data Entry and Data Analysis.</p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="project-card glass">
+            <motion.div variants={fadeUp} className="project-card glass">
               <div className="project-img placeholder-3"></div>
               <div className="project-info">
                 <h3>High-End Graphics Design</h3>
                 <p>Quality graphics for events and birthdays, image fixing using Photoshop and Canva.</p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="relative z-10">
-        <h2 className="section-title">Let's Build</h2>
-        <div className="contact-container">
-          <div className="contact-box glass">
-            <Mail size={40} className="contact-icon" color="#3498db" />
-            <h3>Looking for a Dev?</h3>
-            <p>Need a software engineer, Web3 mod, or designer for your next campaign?</p>
-            <a href="mailto:ehimenaudu56@gmail.com" className="btn primary">Send an Email</a>
-          </div>
+        <motion.h2 
+          className="section-title"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.8 }}
+          variants={fadeUp}
+        >
+          Let's Build
+        </motion.h2>
+        
+        <div className="contact-layout">
+          {/* Contact Details */}
+          <motion.div 
+            className="contact-details"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+          >
+            <div className="contact-box glass">
+              <Mail size={32} className="contact-icon" color="#3498db" />
+              <div>
+                <h3>Email</h3>
+                <p>ehimenaudu56@gmail.com</p>
+                <a href="mailto:ehimenaudu56@gmail.com" className="contact-link">Send an Email</a>
+              </div>
+            </div>
 
-          <div className="contact-box glass">
-            <Smartphone size={40} className="contact-icon" color="#25D366" />
-            <h3>Just wanna Chat?</h3>
-            <p>I'm always down to chat about tech, edge-computing, or cinematic design.</p>
-            <a href="https://wa.me/2347071316989" target="_blank" rel="noreferrer" className="btn secondary">WhatsApp Me</a>
-          </div>
+            <div className="contact-box glass mt-20">
+              <Smartphone size={32} className="contact-icon" color="#25D366" />
+              <div>
+                <h3>WhatsApp</h3>
+                <p>+234 707 131 6989</p>
+                <a href="https://wa.me/2347071316989" target="_blank" rel="noreferrer" className="contact-link">Message Me</a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Contact Form */}
+          <motion.div 
+            className="contact-form-container glass"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+          >
+            <h3>Send a Message</h3>
+            <form onSubmit={handleContactSubmit} className="contact-form">
+              <div className="form-group">
+                <input 
+                  type="text" 
+                  placeholder="Your Name" 
+                  required 
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                />
+              </div>
+              <div className="form-group">
+                <input 
+                  type="email" 
+                  placeholder="Your Email" 
+                  required 
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                />
+              </div>
+              <div className="form-group">
+                <textarea 
+                  placeholder="Your Message" 
+                  rows="4" 
+                  required
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                ></textarea>
+              </div>
+              <button type="submit" className="btn primary submit-btn" disabled={formStatus === 'sending'}>
+                {formStatus === 'sending' ? 'Sending...' : formStatus === 'sent' ? 'Sent!' : <><Send size={18} /> Send Message</>}
+              </button>
+            </form>
+          </motion.div>
         </div>
       </section>
 
+      {/* Resume Modal */}
+      <AnimatePresence>
+        {isResumeOpen && (
+          <motion.div 
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsResumeOpen(false)}
+          >
+            <motion.div 
+              className="modal-content glass"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="close-btn" onClick={() => setIsResumeOpen(false)}>
+                <X size={24} />
+              </button>
+              <h2>My Resume</h2>
+              <div className="resume-preview">
+                <p>ZICRON - Software Engineer</p>
+                <ul>
+                  <li>React, Spring Boot, Python</li>
+                  <li>Edge-Computing & Computer Vision</li>
+                  <li>UI/UX Design & Web3 Community Management</li>
+                </ul>
+              </div>
+              <div className="modal-actions">
+                {/* Normally this would link to an actual PDF */}
+                <a href="#" onClick={(e) => { e.preventDefault(); alert("Downloading PDF..."); }} className="btn primary">
+                  <Download size={18} /> Download PDF
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <footer className="glass-nav relative z-10">
         <p>&copy; {new Date().getFullYear()} ZICRON. All Rights Reserved.</p>
-        <p className="footer-sub">Engineered with React & GitHub API</p>
+        <p className="footer-sub">Engineered with React, Framer Motion & GitHub API</p>
       </footer>
     </div>
   );
