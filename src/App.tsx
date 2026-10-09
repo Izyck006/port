@@ -57,15 +57,38 @@ function App() {
     fetchContributions();
   }, []);
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
-    // Simulate network request
-    setTimeout(() => {
-      setFormStatus('sent');
-      setFormData({ name: '', email: '', message: '' });
+    
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/ehimenaudu56@gmail.com", {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            _subject: `New Portfolio Message from ${formData.name}`
+        })
+      });
+
+      if (response.ok) {
+        setFormStatus('sent');
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setFormStatus(''), 3000);
+      } else {
+        setFormStatus('error');
+        setTimeout(() => setFormStatus(''), 3000);
+      }
+    } catch (error) {
+      console.error(error);
+      setFormStatus('error');
       setTimeout(() => setFormStatus(''), 3000);
-    }, 1500);
+    }
   };
 
   // Animation variants
@@ -378,7 +401,7 @@ function App() {
                 ></textarea>
               </div>
               <button type="submit" className="btn primary submit-btn" disabled={formStatus === 'sending'}>
-                {formStatus === 'sending' ? 'Sending...' : formStatus === 'sent' ? 'Sent!' : <><Send size={18} /> Send Message</>}
+                {formStatus === 'sending' ? 'Sending...' : formStatus === 'sent' ? 'Sent!' : formStatus === 'error' ? 'Error. Try Again' : <><Send size={18} /> Send Message</>}
               </button>
             </form>
           </motion.div>
