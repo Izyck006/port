@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, Send, Sun, Moon } from 'lucide-react';
+import { ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, Send, Sun, Moon, Bot, Gamepad2, Cpu, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContributionSkyline from './components/ui/contribution-skyline';
+import { SourceCodeSection } from './components/source-code/SourceCodeSection';
 import './index.css';
 import './App.css';
 
@@ -30,7 +31,7 @@ function App() {
   const [repos, setRepos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [contributions, setContributions] = useState<{ date: string; count: number }[]>([]);
-  
+
   // Theme state
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('theme');
@@ -122,19 +123,19 @@ function App() {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormStatus('sending');
-    
+
     try {
       const response = await fetch("https://formsubmit.co/ajax/ehimenaudu56@gmail.com", {
         method: "POST",
-        headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            message: formData.message,
-            _subject: `New Portfolio Message from ${formData.name}`
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          _subject: `New Portfolio Message from ${formData.name}`
         })
       });
 
@@ -168,7 +169,7 @@ function App() {
   };
 
   return (
-    <div className="app-container">
+    <div className={`app-container ${theme}`}>
       {/* Background Glows */}
       <div className="glow-orb"></div>
       <div className="glow-orb purple"></div>
@@ -179,8 +180,10 @@ function App() {
         <div className="nav-content">
           <div className="nav-brand">
             <div className="logo">ISAAC.</div>
-            <button 
-              onClick={toggleTheme} 
+            <button
+              id="theme-toggle-mobile"
+              type="button"
+              onClick={toggleTheme}
               className="theme-toggle-btn mobile-toggle"
               title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               aria-label="Toggle theme"
@@ -193,10 +196,13 @@ function App() {
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Arsenal</a></li>
             <li><a href="#projects">Drops</a></li>
+            <li><a href="#source-code">Source Code</a></li>
             <li><a href="#contact">Connect</a></li>
           </ul>
-          <button 
-            onClick={toggleTheme} 
+          <button
+            id="theme-toggle"
+            type="button"
+            onClick={toggleTheme}
             className="theme-toggle-btn desktop-toggle"
             title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
             aria-label="Toggle theme"
@@ -208,7 +214,7 @@ function App() {
 
       {/* Hero Section */}
       <header id="home" className="relative z-10">
-        <motion.div 
+        <motion.div
           className="hero-content glass"
           initial="hidden"
           animate="visible"
@@ -217,7 +223,7 @@ function App() {
           <p className="subtitle">SOFTWARE ENGINEER</p>
           <h1>ISAAC</h1>
           <p className="description">
-            Bridging the gap between edge-computing AI, coding, Web3 communities, and cinematic design.
+            Bridging the gap between edge-computing, AI, coding, Web3 communities and cinematic design.
           </p>
           <div className="btn-group">
             <a href="#projects" className="btn primary">View My Work</a>
@@ -227,7 +233,7 @@ function App() {
 
       {/* About Section */}
       <section id="about" className="relative z-10">
-        <motion.h2 
+        <motion.h2
           className="section-title"
           initial="hidden"
           whileInView="visible"
@@ -237,7 +243,7 @@ function App() {
           The Blueprint
         </motion.h2>
         <div className="about-grid">
-          <motion.div 
+          <motion.div
             className="about-text glass"
             initial="hidden"
             whileInView="visible"
@@ -245,8 +251,8 @@ function App() {
             variants={fadeUp}
           >
             <p>
-              Full-stack software engineer and systems builder. I don't just write code; I build ecosystems. 
-              Whether I'm deploying React-based computer vision dashboards, mentoring emerging devs in frontend engineering, 
+              Full-stack software engineer and systems builder. I don't just write code; I build ecosystems.
+              Whether I'm deploying React-based computer vision dashboards, mentoring emerging devs in frontend engineering,
               or managing communities in the Web3 space, I focus on shipping high-end results.
             </p>
             <p>
@@ -258,7 +264,7 @@ function App() {
 
       {/* Skills Section */}
       <section id="skills" className="relative z-10">
-        <motion.h2 
+        <motion.h2
           className="section-title"
           initial="hidden"
           whileInView="visible"
@@ -267,27 +273,53 @@ function App() {
         >
           The Arsenal
         </motion.h2>
-        <motion.div 
+        <motion.div
           className="skills-container"
           variants={staggerContainer}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          
+
           <motion.div variants={fadeUp} className="skill-card glass ai-card">
             <div className="skill-icon"><Terminal size={32} color="#3498db" /></div>
             <h3>Engineering & AI</h3>
             <p>Building intelligent systems and responsive frontends.</p>
             <div className="skill-tags">
-              <span className="skill-tag"><Code size={12} className="mr-1"/> Python</span>
-              <span className="skill-tag"><Code size={12} className="mr-1"/> React</span>
-              <span className="skill-tag"><Database size={12} className="mr-1"/> Spring Boot</span>
-              <span className="skill-tag"><Terminal size={12} className="mr-1"/> OpenCV</span>
+              <span className="skill-tag"><Code size={12} className="mr-1" /> Python</span>
+              <span className="skill-tag"><Code size={12} className="mr-1" /> React</span>
+              <span className="skill-tag"><Database size={12} className="mr-1" /> Spring Boot</span>
+              <span className="skill-tag"><Terminal size={12} className="mr-1" /> OpenCV</span>
             </div>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="skill-card glass">
+          <motion.div variants={fadeUp} className="skill-card glass bot-card">
+            <div className="skill-icon"><Bot size={32} color="#00e5ff" /></div>
+            <h3>AI Automation</h3>
+            <p>Autonomous Agentic Workflows & LLM Orchestration.</p>
+            <div className="skill-tags">
+              <span className="skill-tag"><Code size={12} className="mr-1" /> Python</span>
+              <span className="skill-tag"><Zap size={12} className="mr-1" /> LangChain</span>
+              <span className="skill-tag"><Cpu size={12} className="mr-1" /> CrewAI</span>
+              <span className="skill-tag">n8n</span>
+              <span className="skill-tag">OpenAI / Gemini</span>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="skill-card glass game-card">
+            <div className="skill-icon"><Gamepad2 size={32} color="#ff007f" /></div>
+            <h3>Game Dev</h3>
+            <p>2D/3D Mechanics, Physics Simulation & Interactive Engines.</p>
+            <div className="skill-tags">
+              <span className="skill-tag"><Code size={12} className="mr-1" /> C#</span>
+              <span className="skill-tag"><Gamepad2 size={12} className="mr-1" /> Unity / Godot</span>
+              <span className="skill-tag"><Code size={12} className="mr-1" /> JavaScript / Canvas</span>
+              <span className="skill-tag">Pygame</span>
+              <span className="skill-tag">GLSL</span>
+            </div>
+          </motion.div>
+
+          <motion.div variants={fadeUp} className="skill-card glass design-card">
             <div className="skill-icon"><Palette size={32} color="#ffcc00" /></div>
             <h3>Design</h3>
             <p>Cinematic Lighting, Logo Systems, Streetwear Aesthetics.</p>
@@ -298,7 +330,7 @@ function App() {
             </div>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="skill-card glass">
+          <motion.div variants={fadeUp} className="skill-card glass web3-card">
             <div className="skill-icon"><Shield size={32} color="#8a2be2" /></div>
             <h3>Web3</h3>
             <p>Community Management, Pro-Shilling, Project Moderation.</p>
@@ -314,7 +346,7 @@ function App() {
 
       {/* Projects Section */}
       <section id="projects" className="relative z-10">
-        <motion.h2 
+        <motion.h2
           className="section-title"
           initial="hidden"
           whileInView="visible"
@@ -323,14 +355,14 @@ function App() {
         >
           Recent Drops
         </motion.h2>
-        
+
         {/* Dynamic GitHub Projects */}
         <div className="github-section">
           <h3 className="sub-section-title"><Code size={24} className="inline-icon" /> Live from GitHub</h3>
           {loading ? (
             <div className="loading-spinner">Loading repos...</div>
           ) : (
-            <motion.div 
+            <motion.div
               className="project-grid"
               variants={staggerContainer}
               initial="hidden"
@@ -362,14 +394,14 @@ function App() {
         <div className="skyline-section mt-50">
           <h3 className="sub-section-title"><Terminal size={24} className="inline-icon" /> Activity Skyline</h3>
           <div className="skyline-wrapper">
-             <ContributionSkyline data={contributions.length > 0 ? contributions : undefined} />
+            <ContributionSkyline data={contributions.length > 0 ? contributions : undefined} />
           </div>
         </div>
 
         {/* Static Handpicked Projects */}
         <div className="handpicked-section mt-50">
           <h3 className="sub-section-title">Handpicked Masterpieces</h3>
-          <motion.div 
+          <motion.div
             className="project-grid"
             variants={staggerContainer}
             initial="hidden"
@@ -403,9 +435,12 @@ function App() {
         </div>
       </section>
 
+      {/* Source Code Store Section */}
+      <SourceCodeSection />
+
       {/* Contact Section */}
       <section id="contact" className="relative z-10">
-        <motion.h2 
+        <motion.h2
           className="section-title"
           initial="hidden"
           whileInView="visible"
@@ -414,10 +449,10 @@ function App() {
         >
           Let's Build
         </motion.h2>
-        
+
         <div className="contact-layout">
           {/* Contact Details */}
-          <motion.div 
+          <motion.div
             className="contact-details"
             initial="hidden"
             whileInView="visible"
@@ -455,7 +490,7 @@ function App() {
           </motion.div>
 
           {/* Contact Form */}
-          <motion.div 
+          <motion.div
             className="contact-form-container glass"
             initial="hidden"
             whileInView="visible"
@@ -465,30 +500,30 @@ function App() {
             <h3>Send a Message</h3>
             <form onSubmit={handleContactSubmit} className="contact-form">
               <div className="form-group">
-                <input 
-                  type="text" 
-                  placeholder="Your Name" 
-                  required 
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  required
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 />
               </div>
               <div className="form-group">
-                <input 
-                  type="email" 
-                  placeholder="Your Email" 
-                  required 
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  required
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
               <div className="form-group">
-                <textarea 
-                  placeholder="Your Message" 
-                  rows="4" 
+                <textarea
+                  placeholder="Your Message"
+                  rows="4"
                   required
                   value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 ></textarea>
               </div>
               <button type="submit" className="btn primary submit-btn" disabled={formStatus === 'sending'}>
