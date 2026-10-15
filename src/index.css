@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap');
+@import "tailwindcss";
 
 @theme {
   --color-background: var(--background);
@@ -17,9 +17,32 @@
     --bg-dark: #050505;
     --card-bg: rgba(255, 255, 255, 0.03);
     --card-border: rgba(255, 255, 255, 0.08);
-    --glass-bg: rgba(5, 5, 5, 0.7);
+    --glass-bg: rgba(5, 5, 5, 0.75);
     --text-main: #e0e0e0;
-    --text-muted: #888;
+    --text-muted: #888888;
+    --heading-color: #ffffff;
+    --logo-color: #ffffff;
+    --nav-link: #888888;
+    --nav-link-hover: #ffffff;
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-border: rgba(255, 255, 255, 0.08);
+    --input-text: #ffffff;
+    --tag-bg: rgba(255, 255, 255, 0.05);
+    --tag-border: rgba(255, 255, 255, 0.1);
+    --tag-text: #cccccc;
+    --btn-primary-bg: #ffffff;
+    --btn-primary-text: #050505;
+    --btn-primary-hover: #d4d4d4;
+    --btn-secondary-border: rgba(255, 255, 255, 0.2);
+    --btn-secondary-text: #ffffff;
+    --btn-secondary-hover: rgba(255, 255, 255, 0.05);
+    --skyline-card-bg: rgba(0, 0, 0, 0.4);
+    --footer-text: #666666;
+    --footer-sub: #444444;
+    --orb-blue: rgba(52, 152, 219, 0.15);
+    --orb-purple: rgba(138, 43, 226, 0.15);
+    --orb-gold: rgba(255, 204, 0, 0.1);
+    --hero-shadow: rgba(255, 255, 255, 0.2);
 
     /* Shadcn UI required vars for the skyline */
     --background: #050505;
@@ -27,6 +50,48 @@
     --border: rgba(255, 255, 255, 0.08);
     --muted: rgba(255, 255, 255, 0.03);
     --muted-foreground: #888;
+  }
+
+  :root.light, html.light, body.light, .light {
+    --accent-gold: #d97706;
+    --accent-blue: #2563eb;
+    --accent-purple: #7c3aed;
+    --bg-dark: #f8fafc;
+    --card-bg: rgba(255, 255, 255, 0.88);
+    --card-border: rgba(0, 0, 0, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.88);
+    --text-main: #334155;
+    --text-muted: #64748b;
+    --heading-color: #0f172a;
+    --logo-color: #0f172a;
+    --nav-link: #64748b;
+    --nav-link-hover: #0f172a;
+    --input-bg: rgba(241, 245, 249, 0.9);
+    --input-border: rgba(0, 0, 0, 0.12);
+    --input-text: #0f172a;
+    --tag-bg: rgba(0, 0, 0, 0.05);
+    --tag-border: rgba(0, 0, 0, 0.1);
+    --tag-text: #334155;
+    --btn-primary-bg: #0f172a;
+    --btn-primary-text: #ffffff;
+    --btn-primary-hover: #1e293b;
+    --btn-secondary-border: rgba(0, 0, 0, 0.18);
+    --btn-secondary-text: #0f172a;
+    --btn-secondary-hover: rgba(0, 0, 0, 0.05);
+    --skyline-card-bg: rgba(255, 255, 255, 0.85);
+    --footer-text: #64748b;
+    --footer-sub: #94a3b8;
+    --orb-blue: rgba(37, 99, 235, 0.1);
+    --orb-purple: rgba(124, 58, 237, 0.1);
+    --orb-gold: rgba(217, 119, 6, 0.08);
+    --hero-shadow: rgba(0, 0, 0, 0.06);
+
+    /* Skyline vars for light mode */
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --border: rgba(0, 0, 0, 0.08);
+    --muted: rgba(0, 0, 0, 0.04);
+    --muted-foreground: #64748b;
   }
 }
 

@@ -1,15 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, Send } from 'lucide-react';
+import { ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, Send, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContributionSkyline from './components/ui/contribution-skyline';
 import './index.css';
 import './App.css';
+
+const repoCustomDescriptions: Record<string, string> = {
+  'ZIC-model_makers': 'Parametric 3D CAD enclosure generator built with Flask, CadQuery, and interactive web visualization for rapid prototyping.',
+  'WorkplaceAttandenceSystem': 'Biometric attendance tracking system with PySide6 desktop GUI, MongoDB, and USB fingerprint scanner integration.',
+  'port': 'Personal engineering portfolio built with React, TypeScript, Framer Motion, and dynamic GitHub API integration.',
+  'tesla': 'Modern interactive Tesla showcase & vehicle visualizer with responsive UI, dynamic controls, and cinematic aesthetics.',
+  'AgroSec': 'Edge-driven AI intrusion detection and computer vision monitoring system for agricultural security and perimeter defense.',
+  'MySignoutPage': 'Full-stack digital yearbook and commemorative sign-out platform with secure authentication and real-time messaging.',
+  'Thronecraft': 'Interactive browser strategy game engine with custom mechanics, tactical grid gameplay, and procedural state management.',
+  'CampusConnect': 'Full-stack campus collaboration platform connecting students, faculty, and academic communities.',
+  'KPI': 'Real-time performance metrics and business intelligence dashboard with interactive charting and analytics.',
+  'rpg': 'Browser-based 2D action role-playing game engineered with vanilla JavaScript, collision physics, and combat loops.',
+  'Project-1': 'Full-stack responsive food delivery web application with item customization, cart persistence, and order tracking.',
+  'Umbrella_Jam': 'Interactive canvas particle physics and weather simulation exploring real-time dynamic forces.',
+  'IVY_D-FIGHT': 'Interactive 2D arcade combat simulator and fighting engine with custom animation states.',
+  'Fluke': 'Computer vision and intelligent automation system engineered for high-precision object detection.',
+  'IVY': 'Experimental AI assistant and conversational interaction interface.',
+  'expense': 'Clean personal finance and budget tracking application with category analytics and expense breakdown.',
+  'gmaee': 'Interactive game prototype featuring custom physics, sprite animations, and audio effects.',
+  'jrsite': 'Modern responsive web portal engineered with lightweight frontend architecture.'
+};
 
 function App() {
   const [repos, setRepos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [contributions, setContributions] = useState<{ date: string; count: number }[]>([]);
   
+  // Theme state
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    const saved = localStorage.getItem('theme');
+    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === 'light') {
+      root.classList.add('light');
+      root.setAttribute('data-theme', 'light');
+      document.body.classList.add('light');
+    } else {
+      root.classList.remove('light');
+      root.setAttribute('data-theme', 'dark');
+      document.body.classList.remove('light');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   // Contact form state
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [formStatus, setFormStatus] = useState(''); // '', 'sending', 'sent'
@@ -17,13 +62,30 @@ function App() {
   // GitHub Username from User
   const githubUsername = 'Izyck006';
 
+  const getRepoDescription = (repo: any) => {
+    if (repoCustomDescriptions[repo.name]) return repoCustomDescriptions[repo.name];
+    const lower = repo.name.toLowerCase();
+    for (const [k, v] of Object.entries(repoCustomDescriptions)) {
+      if (k.toLowerCase() === lower) return v;
+    }
+    if (repo.description && repo.description.trim()) {
+      return repo.description.replace(/in Rural Jigawa/gi, 'for modern agriculture');
+    }
+    return "Production-ready software project built with modern engineering standards.";
+  };
+
   useEffect(() => {
     const fetchRepos = async () => {
       try {
-        const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=6`);
+        const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=12`);
         const data = await response.json();
-        // Filter out forks if desired, or just take the latest 6
-        setRepos(data.slice(0, 6));
+        if (Array.isArray(data)) {
+          // Take active repos (filtering out forks)
+          const filtered = data.filter((repo: any) => !repo.fork);
+          setRepos(filtered.slice(0, 6));
+        } else {
+          setRepos([]);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching repos:", error);
@@ -115,7 +177,17 @@ function App() {
       {/* Navigation */}
       <nav className="glass-nav">
         <div className="nav-content">
-          <div className="logo">ISAAC.</div>
+          <div className="nav-brand">
+            <div className="logo">ISAAC.</div>
+            <button 
+              onClick={toggleTheme} 
+              className="theme-toggle-btn mobile-toggle"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+          </div>
           <ul className="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
@@ -123,6 +195,14 @@ function App() {
             <li><a href="#projects">Drops</a></li>
             <li><a href="#contact">Connect</a></li>
           </ul>
+          <button 
+            onClick={toggleTheme} 
+            className="theme-toggle-btn desktop-toggle"
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
         </div>
       </nav>
 
@@ -165,8 +245,8 @@ function App() {
             variants={fadeUp}
           >
             <p>
-              Currently engineering software at Federal University of Dutse (FUD). I don't just write code; I build ecosystems. 
-              Whether I'm deploying React-based computer vision dashboards, tutoring the next generation of devs in HTML/CSS, 
+              Full-stack software engineer and systems builder. I don't just write code; I build ecosystems. 
+              Whether I'm deploying React-based computer vision dashboards, mentoring emerging devs in frontend engineering, 
               or managing communities in the Web3 space, I focus on shipping high-end results.
             </p>
             <p>
@@ -261,7 +341,7 @@ function App() {
                 <motion.div variants={fadeUp} key={repo.id} className="project-card glass">
                   <div className="project-info">
                     <h3>{repo.name}</h3>
-                    <p className="repo-desc">{repo.description || "No description provided."}</p>
+                    <p className="repo-desc">{getRepoDescription(repo)}</p>
                     <div className="repo-meta">
                       {repo.language && <span className="lang-tag">{repo.language}</span>}
                       <span className="stars-tag">⭐ {repo.stargazers_count}</span>
@@ -281,7 +361,7 @@ function App() {
         {/* Contribution Skyline */}
         <div className="skyline-section mt-50">
           <h3 className="sub-section-title"><Terminal size={24} className="inline-icon" /> Activity Skyline</h3>
-          <div className="glass p-2 sm:p-4 rounded-xl overflow-hidden w-full mx-auto max-w-[1100px] bg-black/40">
+          <div className="skyline-wrapper">
              <ContributionSkyline data={contributions.length > 0 ? contributions : undefined} />
           </div>
         </div>
@@ -300,7 +380,7 @@ function App() {
               <div className="project-img placeholder-1"></div>
               <div className="project-info">
                 <h3>Livestock Deterrence AI</h3>
-                <p>An edge-computing AI pipeline for farmland protection in Rural Jigawa, featuring real-time computer vision synced to a React web dashboard.</p>
+                <p>An edge-computing AI pipeline for autonomous farmland protection and perimeter security, featuring real-time computer vision synced to a React web dashboard.</p>
               </div>
             </motion.div>
 
@@ -354,10 +434,21 @@ function App() {
             </div>
 
             <div className="contact-box glass mt-20">
+              <svg className="contact-icon" style={{ stroke: 'var(--heading-color)' }} width="32" height="32" viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+              <div>
+                <h3>GitHub</h3>
+                <p>@Izyck006</p>
+                <a href="https://github.com/Izyck006" target="_blank" rel="noreferrer" className="contact-link">View Profile</a>
+              </div>
+            </div>
+
+            <div className="contact-box glass mt-20">
               <Smartphone size={32} className="contact-icon" color="#25D366" />
               <div>
                 <h3>WhatsApp</h3>
-                <p>+234 707 131 6989</p>
+                <p>Direct Message</p>
                 <a href="https://wa.me/2347071316989" target="_blank" rel="noreferrer" className="contact-link">Message Me</a>
               </div>
             </div>
