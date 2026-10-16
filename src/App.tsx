@@ -570,7 +570,7 @@ function App() {
 
       <footer className="glass-nav relative z-10">
         <p>&copy; {new Date().getFullYear()} ISAAC. All Rights Reserved.</p>
-        <p className="footer-sub">Engineered with React, Framer Motion & GitHub API</p>
+        <p className="footer-sub">Hire Me</p>
       </footer>
     </div>
   );
