@@ -19,14 +19,12 @@ export const SourceCodeCard: React.FC<SourceCodeCardProps> = ({ item, downloadCo
       exit={{ opacity: 0, scale: 0.96 }}
       layout
     >
-      {/* Folder Tab Header */}
       <div className="folder-tab-bar">
         <div className="folder-tab-accent"></div>
         <div className="folder-stitched-line"></div>
       </div>
 
       <div className="folder-card-body">
-        {/* Top File Meta Row */}
         <div className="file-header-row">
           <div className="file-id-badge">
             <div className="file-icon-wrap">
@@ -44,13 +42,11 @@ export const SourceCodeCard: React.FC<SourceCodeCardProps> = ({ item, downloadCo
           </div>
         </div>
 
-        {/* Project Title & Description */}
         <div className="folder-content-body">
           <h3 className="folder-item-title">{item.title}</h3>
           <p className="folder-item-desc">{item.description}</p>
         </div>
 
-        {/* Tech Stack Tags */}
         <div className="folder-tags-row">
           <span className="folder-primary-lang">{item.language}</span>
           {item.tags.slice(1, 4).map((tag, idx) => (
@@ -58,7 +54,6 @@ export const SourceCodeCard: React.FC<SourceCodeCardProps> = ({ item, downloadCo
           ))}
         </div>
 
-        {/* Card Footer Divider & Actions */}
         <div className="folder-card-divider"></div>
 
         <div className="folder-card-footer">

@@ -2,27 +2,6 @@
 
 import * as React from "react"
 
-/**
- * Contribution Skyline — a year of activity as a GitHub-style heat map that
- * folds up into an isometric skyline, and back down again.
- *
- * It is one scene, not two charts. Every day is a box on a grid; the 2D view
- * is that grid seen straight down, the 3D view is the same grid seen from the
- * corner. Switching views swings one camera between the two while each week's
- * bars rise (or settle) in a wave from the oldest week to the newest, so the
- * flat heat map visibly becomes the skyline — nothing is swapped or cut.
- *
- * Hover or tap a day for its count, arrow keys walk the grid, hover a legend
- * swatch to isolate that level, and in 3D drag to orbit (double-click resets).
- * Palette and theme changes blend rather than flip.
- *
- * Canvas + DOM, React is the only import. Pass `data` as `{ date, count }[]`;
- * without it a seeded, believable year is generated so the demo is never empty.
- */
-
-// #region contributions
-// Pure: dates, grid, stats, levels, camera and colour maths. Lifted out and run by the test.
-
 export type ContributionDay = { date: string; count: number }
 export type Cell = { date: string; count: number; level: number; week: number; day: number }
 export type Streak = { days: number; start: string | null; end: string | null }
@@ -50,14 +29,8 @@ export const smoothstep = (a: number, b: number, x: number): number => {
   return t * t * (3 - 2 * t)
 }
 
-/** UTC midnight → "YYYY-MM-DD". */
 export const toKey = (ms: number): string => new Date(ms).toISOString().slice(0, 10)
 
-/**
- * Any date-ish value → UTC midnight of its calendar day. "YYYY-MM-DD" strings
- * are read literally (no timezone drift), Date objects by their local day,
- * numbers as UTC timestamps.
- */
 export const dayMs = (v: string | number | Date): number => {
   if (typeof v === "number") return Math.floor(v / DAY_MS) * DAY_MS
   if (typeof v === "string") {
@@ -68,7 +41,6 @@ export const dayMs = (v: string | number | Date): number => {
   return Date.UTC(v.getFullYear(), v.getMonth(), v.getDate())
 }
 
-/** mulberry32 — small, fast, deterministic. */
 export const rng = (seed: number) => {
   let a = seed >>> 0
   return (): number => {
@@ -80,10 +52,6 @@ export const rng = (seed: number) => {
   }
 }
 
-/**
- * A believable year for demos: quiet weekends, a few busy seasons, a mood that
- * drifts week to week, and the odd enormous day.
- */
 export const generateContributions = (endMs: number, seed = 7, days = 371): ContributionDay[] => {
   const r = rng(seed)
   const bursts = Array.from({ length: 4 }, () => ({ at: r(), width: 0.035 + r() * 0.07, gain: 0.6 + r() * 1.1 }))
@@ -107,12 +75,6 @@ export const generateContributions = (endMs: number, seed = 7, days = 371): Cont
   return out
 }
 
-/**
- * The grid: columns are weeks, rows are weekdays (row 0 = `weekStart`). It
- * ends on `endMs` and starts on the week containing the day one year earlier.
- * Levels 1–4 split the non-zero days by their share of a busy day — the 95th
- * percentile, so one freak day can't wash every other day out to level 1.
- */
 export const buildGrid = (data: ContributionDay[], endMs: number, weekStart = 0) => {
   const counts = new Map<string, number>()
   for (const d of data) {
@@ -136,11 +98,9 @@ export const buildGrid = (data: ContributionDay[], endMs: number, weekStart = 0)
   return { cells, weeks: cells.length ? cells[cells.length - 1].week + 1 : 0, max: nz.length ? nz[nz.length - 1] : 0 }
 }
 
-/** 0 for an empty day, else 1–4 by quarters of `busy`. Anything at or past `busy` is 4. */
 export const levelOf = (count: number, busy: number): number =>
   count <= 0 ? 0 : busy <= 0 ? 4 : 1 + Math.min(3, Math.floor((count / busy) * 4))
 
-/** Total, busiest day, longest run, and the run that reaches today (or yesterday — today isn't over). */
 export const computeStats = (cells: Cell[]): ContributionStats => {
   let total = 0
   let best = 0
@@ -176,7 +136,6 @@ export const computeStats = (cells: Cell[]): ContributionStats => {
   }
 }
 
-/** A label on each week whose first day starts a new month; a cramped first label is dropped. */
 export const monthLabels = (cells: Cell[], weeks: number, locale = "en-US") => {
   const fmt = new Intl.DateTimeFormat(locale, { month: "short", timeZone: "UTC" })
   const out: { week: number; label: string }[] = []
@@ -192,14 +151,11 @@ export const monthLabels = (cells: Cell[], weeks: number, locale = "en-US") => {
   return out
 }
 
-/** Box height in grid units. Empty days are thin slabs; the busiest day is ~7.6 cells tall. */
 export const barHeight = (count: number, max: number, scale = 1): number =>
   count > 0 && max > 0 ? 0.4 + Math.pow(count / max, 0.85) * 7.2 * scale : 0.2
 
-/** Share of the morph each bar spends waiting — the wave sweeps oldest week → newest. */
 export const WAVE = 0.42
 
-/** 0 → 1 as a bar rises during the morph. Every bar is flat at t=0 and fully up at t=1. */
 export const riseAt = (t: number, week: number, weeks: number, day: number): number => {
   const d = (weeks > 1 ? week / (weeks - 1) : 0) * 0.36 + (day / 6) * 0.06
   return easeOutCubic((t - d) / (1 - WAVE))
@@ -212,24 +168,17 @@ export const ELEV_RANGE: [number, number] = [(18 * Math.PI) / 180, (62 * Math.PI
 
 export type Cam = { cs: number; sn: number; se: number; ce: number }
 
-/**
- * e=0 looks straight down (yaw 0, elevation 90°): x across, y down, height
- * invisible — a plain heat map. e=1 is the isometric corner view. Orbit
- * offsets only apply in proportion to e, so the flat view never tilts.
- */
 export const camera = (e: number, dYaw = 0, dElev = 0): Cam => {
   const yaw = Math.min(YAW_RANGE[1], Math.max(0, lerp(0, YAW_3D + dYaw, e)))
   const elev = lerp(Math.PI / 2, Math.min(ELEV_RANGE[1], Math.max(ELEV_RANGE[0], ELEV_3D + dElev)), e)
   return { cs: Math.cos(yaw), sn: Math.sin(yaw), se: Math.sin(elev), ce: Math.cos(elev) }
 }
 
-/** World (x = week, y = weekday, z = up) → screen, before scale/offset. */
 export const project = (c: Cam, x: number, y: number, z: number): [number, number] => [
   x * c.cs - y * c.sn,
   (x * c.sn + y * c.cs) * c.se - z * c.ce,
 ]
 
-/** Painter's depth for yaw in [0°, 90°]: larger is nearer the viewer, so draw ascending. */
 export const depthOf = (c: Cam, x: number, y: number): number => x * c.sn + y * c.cs
 
 export const mixRGB = (a: RGB, b: RGB, t: number): RGB => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
@@ -238,7 +187,6 @@ export const luminance = (c: RGB): number => (0.2126 * c[0] + 0.7152 * c[1] + 0.
 export type PaletteName = "github" | "halloween" | "ocean" | "ember" | "grape" | "mono"
 export type PaletteInput = PaletteName | string[] | { light: string[]; dark: string[] }
 
-/** Four colours per theme, lightest activity → heaviest. */
 export const PALETTES: Record<PaletteName, { light: string[]; dark: string[] }> = {
   github: { light: ["#c6e48b", "#7bc96f", "#239a3b", "#196127"], dark: ["#0e4429", "#006d32", "#26a641", "#39d353"] },
   halloween: { light: ["#ffee4a", "#ffc501", "#fe9600", "#b33c00"], dark: ["#631c03", "#bd561d", "#fa7a18", "#fddf68"] },
@@ -253,43 +201,42 @@ export const resolvePalette = (p: PaletteInput | undefined, dark: boolean): stri
   const base = PALETTES.github[dark ? "dark" : "light"]
   return [0, 1, 2, 3].map((i) => pick[i] ?? pick[pick.length - 1] ?? base[i])
 }
-// #endregion
 
 type View = "2d" | "3d"
 
 export interface ContributionSkylineProps {
-  /** One entry per day, `YYYY-MM-DD`. Repeated dates add up. Omit for a generated sample year. */
+  
   data?: ContributionDay[]
-  /** Last day shown. Defaults to the latest date in `data`, or today. */
+  
   endDate?: string | Date
-  /** Controlled view. */
+  
   view?: View
-  /** Uncontrolled starting view. The 3D view rises out of the flat one when it first scrolls into sight. */
+  
   defaultView?: View
   onViewChange?: (view: View) => void
-  /** A preset, four colours, or `{ light, dark }` sets of four. */
+  
   palette?: PaletteInput
-  /** Heading. Defaults to "{total} contributions in the last year". */
+  
   title?: React.ReactNode
-  /** Singular noun for a unit of activity. */
+  
   unit?: string
-  /** Plural noun. Defaults to `unit + "s"`. */
+  
   unitPlural?: string
-  /** Multiplies bar heights in 3D. */
+  
   heightScale?: number
-  /** Morph length, ms. */
+  
   duration?: number
-  /** 0 puts Sunday on the top row, 1 puts Monday there. */
+  
   weekStart?: 0 | 1
-  /** Drag to orbit in 3D. */
+  
   orbit?: boolean
   showStats?: boolean
   showLegend?: boolean
   showToggle?: boolean
-  /** Replaces the hint under the chart. `null` renders none. */
+  
   footer?: React.ReactNode
   locale?: string
-  /** Seed for the generated sample year. */
+  
   seed?: number
   onCellClick?: (day: ContributionDay) => void
   className?: string
@@ -298,7 +245,6 @@ export interface ContributionSkylineProps {
 const FG_FALLBACK: RGB = [23, 23, 23]
 const BG_FALLBACK: RGB = [255, 255, 255]
 
-// Any CSS colour → sRGB, by letting the browser paint it. Handles oklch, color-mix, names…
 let probe: CanvasRenderingContext2D | null = null
 const toRGB = (color: string, fallback: RGB | null): RGB | null => {
   if (!probe) {
@@ -441,7 +387,7 @@ export default function ContributionSkyline({
   data,
   endDate,
   view: viewProp,
-  defaultView = "3d",
+  defaultView = "2d",
   onViewChange,
   palette = "github",
   title,
@@ -503,7 +449,6 @@ export default function ContributionSkyline({
     return (c.count ? nf.format(c.count) + " " + noun(c.count) : "No " + plural) + " on " + dfl.format(dayMs(c.date))
   }
 
-  // Everything the render loop reads, refreshed every render so the loop never closes over stale props.
   const cfg = React.useRef({ model, duration, heightScale, orbit, palette, legendLevel, onCellClick, target: view === "3d" ? 1 : 0, setActive, setWidth, setTheme, setAnnounce, describe })
   cfg.current = { model, duration, heightScale, orbit, palette, legendLevel, onCellClick, target: view === "3d" ? 1 : 0, setActive, setWidth, setTheme, setAnnounce, describe }
 
@@ -520,16 +465,15 @@ export default function ContributionSkyline({
     const darkMq = window.matchMedia("(prefers-color-scheme: dark)")
     let reduced = reduceMq.matches
 
-    // morph: t is linear time 0 (2D) → 1 (3D); the camera eases it, the bars wave it
     let t = 0
     let target = 0
     let entered = false
-    // orbit offsets, eased toward their goals
+    
     let yaw = 0
     let elev = 0
     let yawGoal = 0
     let elevGoal = 0
-    // layout
+    
     let W = 0
     let H2 = 0
     let H3 = 0
@@ -539,14 +483,14 @@ export default function ContributionSkyline({
     let gutter = 30
     let labelW = 30
     let font = "10px sans-serif"
-    // colours: [empty, l1, l2, l3, l4] × rgb, eased toward the goal
+    
     const col = new Float32Array(15)
     const colGoal = new Float32Array(15)
     let colReady = false
     let fg: RGB = FG_FALLBACK
     let bg: RGB = BG_FALLBACK
     let isDark = false
-    // cells
+    
     let n = 0
     let weeks = 0
     let wk = new Float32Array(0)
@@ -561,7 +505,7 @@ export default function ContributionSkyline({
     let order: number[] = []
     let months: { week: number; label: string }[] = []
     let weekdayRows: { day: number; label: string }[] = []
-    // interaction
+    
     let hovered = -1
     let pinned = -1
     let activeIdx = -1
@@ -611,7 +555,7 @@ export default function ContributionSkyline({
       isDark = luminance(bg) < 0.45
       font = "400 10px " + (cs.fontFamily || "sans-serif")
       const pal = resolvePalette(cfg.current.palette, isDark)
-      const empty = mixRGB(bg, fg, isDark ? 0.11 : 0.075)
+      const empty = isDark ? mixRGB(bg, fg, 0.12) : [226, 232, 240]
       const all: RGB[] = [empty, ...pal.map((c) => toRGB(c, FG_FALLBACK) ?? FG_FALLBACK)]
       for (let k = 0; k < 5; k++) for (let ch = 0; ch < 3; ch++) colGoal[k * 3 + ch] = all[k][ch]
       if (!colReady || reduced) {
@@ -627,7 +571,6 @@ export default function ContributionSkyline({
       kick()
     }
 
-    // Projected extent of the scene for camera e, with each bar at zOf(i).
     const extent = (cam: Cam, e: number, full: boolean) => {
       const w = lerp(0.78, 0.9, e)
       const off = (1 - w) / 2
@@ -653,7 +596,7 @@ export default function ContributionSkyline({
         add(x0, y0 + w, 0)
         add(x0 + w, y0, 0)
       }
-      // room for the month labels that run along the front edge in 3D
+      
       add(0, 7 + 1.5 * e, 0)
       add(weeks, 7 + 1.5 * e, 0)
       return { minx, maxx, miny, maxy }
@@ -663,14 +606,14 @@ export default function ContributionSkyline({
       const w = Math.round(stage.clientWidth)
       if (!w || !n) return
       W = w
-      // Narrow cards give the weekday names' column to the grid instead; rows get too tight to label.
+      
       gutter = W < 520 ? 0 : labelW
       dpr = Math.min(2, window.devicePixelRatio || 1)
       const b2 = extent(camera(0), 0, true)
       H2 = 20 + 4 + ((b2.maxy - b2.miny) / (b2.maxx - b2.minx)) * (W - gutter - 4)
       const b3 = extent(camera(1), 1, true)
       const natural = ((b3.maxy - b3.miny) / (b3.maxx - b3.minx)) * (W - 40) + 40
-      H3 = Math.max(Math.min(natural, W * 0.72, 620), Math.min(natural, 240))
+      H3 = Math.max(Math.min(natural, W * 0.38, 280), 180)
       Hmax = Math.ceil(Math.max(H2, H3))
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(Hmax * dpr)
@@ -714,7 +657,7 @@ export default function ContributionSkyline({
       const w = lerp(0.78, 0.9, e)
       const off = (1 - w) / 2
       const radius = lerp(0.17, 0.03, e) * s
-      const outline = (1 - e) * 0.07
+      const outline = Math.max(0.04, (1 - e) * 0.07)
       const lift = 0.7 * e
       const ex = col[0]
       const ey = col[1]
@@ -728,17 +671,17 @@ export default function ContributionSkyline({
         const y1 = y0 + w
         const z = zs[i] + hover[i] * lift
         const o = i * 24
-        // top
+        
         polys[o] = px(x0, y0); polys[o + 1] = py(x0, y0, z)
         polys[o + 2] = px(x1, y0); polys[o + 3] = py(x1, y0, z)
         polys[o + 4] = px(x1, y1); polys[o + 5] = py(x1, y1, z)
         polys[o + 6] = px(x0, y1); polys[o + 7] = py(x0, y1, z)
-        // +y face (left on screen)
+        
         polys[o + 8] = px(x0, y1); polys[o + 9] = py(x0, y1, 0)
         polys[o + 10] = px(x1, y1); polys[o + 11] = py(x1, y1, 0)
         polys[o + 12] = polys[o + 4]; polys[o + 13] = polys[o + 5]
         polys[o + 14] = polys[o + 6]; polys[o + 15] = polys[o + 7]
-        // +x face (right on screen)
+        
         polys[o + 16] = px(x1, y0); polys[o + 17] = py(x1, y0, 0)
         polys[o + 18] = polys[o + 10]; polys[o + 19] = polys[o + 11]
         polys[o + 20] = polys[o + 4]; polys[o + 21] = polys[o + 5]
@@ -795,7 +738,6 @@ export default function ContributionSkyline({
         }
       }
 
-      // Labels: along the top and left in 2D, along the front edge in 3D. They fade, never pop.
       const muted = mixRGB(bg, fg, 0.55)
       ctx.font = font
       const a2 = 1 - smoothstep(0, 0.4, e)
@@ -829,7 +771,6 @@ export default function ContributionSkyline({
         }
       }
 
-      // Tooltip rides the active cell through morphs and orbits.
       if (activeIdx >= 0 && activeIdx < n) {
         const i = activeIdx
         const z = zs[i] + hover[i] * lift
@@ -900,7 +841,6 @@ export default function ContributionSkyline({
       raf = requestAnimationFrame(tick)
     }
 
-    // The active day is the hovered one, else the pinned one (tap, click or keyboard).
     const refreshActive = () => {
       const next = hovered >= 0 ? hovered : pinned
       if (next === activeIdx) return
@@ -935,7 +875,7 @@ export default function ContributionSkyline({
         try {
           canvas.setPointerCapture(ev.pointerId)
         } catch {
-          /* capture is a nicety */
+          
         }
       }
     }
@@ -1053,7 +993,6 @@ export default function ContributionSkyline({
     retheme()
     relayout()
 
-    // The 3D view rises out of the flat one the first time it is seen.
     const enter = () => {
       if (entered) return
       entered = true
@@ -1131,8 +1070,7 @@ export default function ContributionSkyline({
       canvas.removeEventListener("blur", onBlur)
       engine.current = null
     }
-    // The loop reads everything else through cfg; it is built once per mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [locale])
 
   React.useEffect(() => {
@@ -1147,7 +1085,6 @@ export default function ContributionSkyline({
     engine.current?.retheme()
   }, [palette])
 
-  // The tooltip's width is needed to keep it inside the card; measure it when its text changes.
   React.useLayoutEffect(() => {
     const tip = tipRef.current
     if (tip && active >= 0) engine.current?.tipWidth(tip.offsetWidth)
@@ -1178,11 +1115,10 @@ export default function ContributionSkyline({
   return (
     <section
       ref={rootRef}
-      className={"relative w-full rounded-xl border p-4 font-sans sm:p-5 " + className}
+      className={"relative w-full rounded-xl p-1 font-sans " + className}
       style={{
-        background: "var(--color-background, #ffffff)",
-        color: "var(--color-foreground, #171717)",
-        borderColor: "var(--color-border, #e5e5e5)",
+        background: "transparent",
+        color: "var(--heading-color, #ffffff)",
       }}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
@@ -1230,7 +1166,7 @@ export default function ContributionSkyline({
         )}
       </header>
 
-      <div className="relative rounded-lg border" style={{ borderColor: "var(--color-border, #e5e5e5)" }}>
+      <div className="relative rounded-lg border" style={{ borderColor: "var(--card-border, rgba(255, 255, 255, 0.08))" }}>
         <div className="relative px-3 pt-3 sm:px-4 sm:pt-4">
           <div
             ref={stageRef}

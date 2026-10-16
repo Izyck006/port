@@ -32,7 +32,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ item, onClose, onP
       const initialized = await initializePaystackPayment({
         key: publicKey,
         email: email,
-        amount: item.price * 100, // in kobo
+        amount: item.price * 100,
         currency: 'NGN',
         metadata: {
           custom_fields: [
@@ -59,7 +59,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ item, onClose, onP
           setStatus('success');
           onPaymentSuccess(item.id, reference);
 
-          // Automatically trigger download
           setTimeout(() => {
             triggerInstantDownload(item.fileName, item.title);
           }, 800);
@@ -95,7 +94,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ item, onClose, onP
           exit={{ opacity: 0, scale: 0.9, y: 20 }}
           transition={{ duration: 0.25, ease: 'easeOut' }}
         >
-          {/* Header Row */}
           <div className="modal-header-row">
             <div className="modal-item-info">
               <div className="modal-icon-badge">
@@ -122,7 +120,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ item, onClose, onP
             </div>
           </div>
 
-          {/* Body Content */}
           {status === 'success' ? (
             <motion.div 
               className="modal-success-view"

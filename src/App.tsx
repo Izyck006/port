@@ -27,12 +27,32 @@ const repoCustomDescriptions: Record<string, string> = {
   'jrsite': 'Modern responsive web portal engineered with lightweight frontend architecture.'
 };
 
+const knownFrontendUrls: Record<string, string> = {
+  'AgroSec': 'https://agro-sec.vercel.app',
+  'tesla': 'https://tesla-alpha-seven.vercel.app',
+  'MySignoutPage': 'https://mysignout-pi.vercel.app',
+  'rpg': 'https://rpg-green.vercel.app',
+  'port': 'https://port-sage-delta.vercel.app',
+};
+
+const getProjectFrontendUrl = (repo: any): string | null => {
+  if (repo.homepage && typeof repo.homepage === 'string') {
+    const trimmed = repo.homepage.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+  }
+  const match = Object.entries(knownFrontendUrls).find(
+    ([k]) => k.toLowerCase() === repo.name.toLowerCase()
+  );
+  return match ? match[1] : null;
+};
+
 function App() {
   const [repos, setRepos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [contributions, setContributions] = useState<{ date: string; count: number }[]>([]);
 
-  // Theme state
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     const saved = localStorage.getItem('theme');
     return (saved === 'light' || saved === 'dark') ? saved : 'dark';
@@ -56,11 +76,9 @@ function App() {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  // Contact form state
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [formStatus, setFormStatus] = useState(''); // '', 'sending', 'sent'
+  const [formStatus, setFormStatus] = useState('');
 
-  // GitHub Username from User
   const githubUsername = 'Izyck006';
 
   const getRepoDescription = (repo: any) => {
@@ -81,7 +99,6 @@ function App() {
         const response = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=12`);
         const data = await response.json();
         if (Array.isArray(data)) {
-          // Take active repos (filtering out forks)
           const filtered = data.filter((repo: any) => !repo.fork);
           setRepos(filtered.slice(0, 6));
         } else {
@@ -112,7 +129,7 @@ function App() {
         }
       } catch (error) {
         console.error("Error fetching events:", error);
-        setContributions([]); // fallback
+        setContributions([]);
       }
     };
 
@@ -154,7 +171,6 @@ function App() {
     }
   };
 
-  // Animation variants
   const fadeUp = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
@@ -170,12 +186,10 @@ function App() {
 
   return (
     <div className={`app-container ${theme}`}>
-      {/* Background Glows */}
       <div className="glow-orb"></div>
       <div className="glow-orb purple"></div>
       <div className="glow-orb gold"></div>
 
-      {/* Navigation */}
       <nav className="glass-nav">
         <div className="nav-content">
           <div className="nav-brand">
@@ -212,7 +226,6 @@ function App() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <header id="home" className="relative z-10">
         <motion.div
           className="hero-content glass"
@@ -231,7 +244,6 @@ function App() {
         </motion.div>
       </header>
 
-      {/* About Section */}
       <section id="about" className="relative z-10">
         <motion.h2
           className="section-title"
@@ -262,7 +274,6 @@ function App() {
         </div>
       </section>
 
-      {/* Skills Section */}
       <section id="skills" className="relative z-10">
         <motion.h2
           className="section-title"
@@ -299,7 +310,6 @@ function App() {
             <p>Autonomous Agentic Workflows & LLM Orchestration.</p>
             <div className="skill-tags">
               <span className="skill-tag"><Code size={12} className="mr-1" /> Python</span>
-              <span className="skill-tag"><Zap size={12} className="mr-1" /> LangChain</span>
               <span className="skill-tag"><Cpu size={12} className="mr-1" /> CrewAI</span>
               <span className="skill-tag">n8n</span>
               <span className="skill-tag">OpenAI / Gemini</span>
@@ -312,10 +322,9 @@ function App() {
             <p>2D/3D Mechanics, Physics Simulation & Interactive Engines.</p>
             <div className="skill-tags">
               <span className="skill-tag"><Code size={12} className="mr-1" /> C#</span>
-              <span className="skill-tag"><Gamepad2 size={12} className="mr-1" /> Unity / Godot</span>
-              <span className="skill-tag"><Code size={12} className="mr-1" /> JavaScript / Canvas</span>
+              <span className="skill-tag"><Gamepad2 size={12} className="mr-1" /> Unity</span>
+              <span className="skill-tag"><Code size={12} className="mr-1" /> JavaScript</span>
               <span className="skill-tag">Pygame</span>
-              <span className="skill-tag">GLSL</span>
             </div>
           </motion.div>
 
@@ -344,7 +353,6 @@ function App() {
         </motion.div>
       </section>
 
-      {/* Projects Section */}
       <section id="projects" className="relative z-10">
         <motion.h2
           className="section-title"
@@ -356,7 +364,6 @@ function App() {
           Recent Drops
         </motion.h2>
 
-        {/* Dynamic GitHub Projects */}
         <div className="github-section">
           <h3 className="sub-section-title"><Code size={24} className="inline-icon" /> Live from GitHub</h3>
           {loading ? (
@@ -369,76 +376,236 @@ function App() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.1 }}
             >
-              {repos.length > 0 ? repos.map(repo => (
-                <motion.div variants={fadeUp} key={repo.id} className="project-card glass">
-                  <div className="project-info">
-                    <h3>{repo.name}</h3>
-                    <p className="repo-desc">{getRepoDescription(repo)}</p>
-                    <div className="repo-meta">
-                      {repo.language && <span className="lang-tag">{repo.language}</span>}
-                      <span className="stars-tag">⭐ {repo.stargazers_count}</span>
+              {repos.length > 0 ? repos.map(repo => {
+                const liveUrl = getProjectFrontendUrl(repo);
+                const targetUrl = liveUrl || repo.html_url;
+                const isLive = Boolean(liveUrl);
+
+                return (
+                  <motion.div variants={fadeUp} key={repo.id} className="project-card glass">
+                    <div className="project-info">
+                      <div className="project-card-header">
+                        <h3>
+                          <a href={targetUrl} target="_blank" rel="noreferrer" className="repo-title-link">
+                            {repo.name}
+                          </a>
+                        </h3>
+                        {isLive && <span className="live-pill">● LIVE</span>}
+                      </div>
+                      <p className="repo-desc">{getRepoDescription(repo)}</p>
+                      <div className="repo-meta">
+                        {repo.language && <span className="lang-tag">{repo.language}</span>}
+                        <span className="stars-tag">⭐ {repo.stargazers_count}</span>
+                      </div>
+                      <div className="repo-actions-group">
+                        {isLive ? (
+                          <>
+                            <a href={liveUrl!} target="_blank" rel="noreferrer" className="btn primary repo-btn flex-1">
+                              Launch App <ExternalLink size={14} />
+                            </a>
+                            <a href={repo.html_url} target="_blank" rel="noreferrer" className="repo-code-icon-btn" title="View Source on GitHub">
+                              <Code size={16} />
+                            </a>
+                          </>
+                        ) : (
+                          <a href={repo.html_url} target="_blank" rel="noreferrer" className="btn secondary repo-btn">
+                            View Code <ExternalLink size={14} />
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <a href={repo.html_url} target="_blank" rel="noreferrer" className="btn secondary repo-btn">
-                      View Code <ExternalLink size={14} />
-                    </a>
-                  </div>
-                </motion.div>
-              )) : (
+                  </motion.div>
+                );
+              }) : (
                 <p>No repositories found.</p>
               )}
             </motion.div>
           )}
         </div>
 
-        {/* Contribution Skyline */}
         <div className="skyline-section mt-50">
           <h3 className="sub-section-title"><Terminal size={24} className="inline-icon" /> Activity Skyline</h3>
           <div className="skyline-wrapper">
-            <ContributionSkyline data={contributions.length > 0 ? contributions : undefined} />
+            <ContributionSkyline data={contributions.length > 0 ? contributions : undefined} defaultView="2d" />
           </div>
         </div>
 
-        {/* Static Handpicked Projects */}
         <div className="handpicked-section mt-50">
-          <h3 className="sub-section-title">Handpicked Masterpieces</h3>
+          <div className="dev-section-heading">
+            <div className="terminal-badge">
+              <Terminal size={14} />
+              <span>CORE_MODULES // ARCHITECTURES</span>
+            </div>
+            <h3 className="sub-section-title">Featured Engineering Architectures</h3>
+            <p className="dev-section-subtitle">
+              Production-grade edge vision pipelines, desktop hardware drivers, procedural kinematics, and real-time 3D web engines.
+            </p>
+          </div>
+
           <motion.div
-            className="project-grid"
+            className="project-grid dev-masterpiece-grid"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            <motion.div variants={fadeUp} className="project-card glass">
-              <div className="project-img placeholder-1"></div>
+            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
+              <div className="card-terminal-bar">
+                <div className="traffic-lights">
+                  <span className="dot dot-red"></span>
+                  <span className="dot dot-yellow"></span>
+                  <span className="dot dot-green"></span>
+                </div>
+                <span className="terminal-file-name">edge_vision/agrosec_pipeline.py</span>
+                <span className="system-status-pill status-green">● PRODUCTION</span>
+              </div>
+              <div className="project-img placeholder-1 dev-img-wrap">
+                <div className="dev-img-overlay">
+                  <span className="hud-badge"><Cpu size={12} /> YOLOv8 + OpenCV</span>
+                  <span className="hud-badge"><Zap size={12} /> Sub-50ms RTSP</span>
+                </div>
+              </div>
               <div className="project-info">
-                <h3>Livestock Deterrence AI</h3>
-                <p>An edge-computing AI pipeline for autonomous farmland protection and perimeter security, featuring real-time computer vision synced to a React web dashboard.</p>
+                <div className="system-type-tag">EDGE AI & PERIMETER MONITORING</div>
+                <h3>AgroSec — Autonomous Farmland Vision</h3>
+                <p>Distributed computer vision edge pipeline engineered for agricultural perimeter defense. Combines hardware-accelerated YOLO detection with low-latency WebSocket video streams and a telemetry control dashboard.</p>
+                <div className="tech-stack-row">
+                  <span className="tech-chip">Python</span>
+                  <span className="tech-chip">OpenCV</span>
+                  <span className="tech-chip">FastAPI</span>
+                  <span className="tech-chip">React</span>
+                  <span className="tech-chip">WebSockets</span>
+                </div>
+                <div className="dev-card-actions">
+                  <a href="https://agro-sec.vercel.app" target="_blank" rel="noreferrer" className="btn primary dev-btn flex-1">
+                    Launch Demo <ExternalLink size={14} />
+                  </a>
+                  <a href="https://github.com/Izyck006/AgroSec" target="_blank" rel="noreferrer" className="btn secondary dev-btn">
+                    Architecture <Code size={14} />
+                  </a>
+                </div>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="project-card glass">
-              <div className="project-img placeholder-4"></div>
+            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
+              <div className="card-terminal-bar">
+                <div className="traffic-lights">
+                  <span className="dot dot-red"></span>
+                  <span className="dot dot-yellow"></span>
+                  <span className="dot dot-green"></span>
+                </div>
+                <span className="terminal-file-name">drivers/biometrics_engine.py</span>
+                <span className="system-status-pill status-blue">● HARDWARE I/O</span>
+              </div>
+              <div className="project-img placeholder-biometric dev-img-wrap">
+                <div className="dev-img-overlay">
+                  <span className="hud-badge"><Shield size={12} /> 1:N Biometric Match</span>
+                  <span className="hud-badge"><Database size={12} /> Offline Sync</span>
+                </div>
+              </div>
               <div className="project-info">
-                <h3>Prompt Engineering</h3>
-                <p>LLM Orchestration, Image Gen, Context Optimization, Data Entry and Data Analysis.</p>
+                <div className="system-type-tag">DESKTOP GUI & HARDWARE INTEGRATION</div>
+                <h3>Biometric Workplace Attendance Engine</h3>
+                <p>High-reliability desktop verification engine built with PySide6 GUI and asynchronous USB fingerprint scanner communication. Includes automated payroll shift calculation and offline-first database synchronization.</p>
+                <div className="tech-stack-row">
+                  <span className="tech-chip">Python</span>
+                  <span className="tech-chip">PySide6</span>
+                  <span className="tech-chip">MongoDB</span>
+                  <span className="tech-chip">USB SDK</span>
+                  <span className="tech-chip">Cryptography</span>
+                </div>
+                <div className="dev-card-actions">
+                  <a href="https://github.com/Izyck006/WorkplaceAttandenceSystem" target="_blank" rel="noreferrer" className="btn primary dev-btn flex-1">
+                    Inspect Architecture <Code size={14} />
+                  </a>
+                  <a href="#source-code" className="btn secondary dev-btn">
+                    Source Code
+                  </a>
+                </div>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="project-card glass">
-              <div className="project-img placeholder-3"></div>
+            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
+              <div className="card-terminal-bar">
+                <div className="traffic-lights">
+                  <span className="dot dot-red"></span>
+                  <span className="dot dot-yellow"></span>
+                  <span className="dot dot-green"></span>
+                </div>
+                <span className="terminal-file-name">kinematics/zigzag_synthesizer.py</span>
+                <span className="system-status-pill status-purple">● ACTIVE ENGINE</span>
+              </div>
+              <div className="project-img placeholder-zigzag dev-img-wrap">
+                <div className="dev-img-overlay">
+                  <span className="hud-badge"><Bot size={12} /> Inverse Kinematics</span>
+                  <span className="hud-badge"><Zap size={12} /> Audio Rhythm Sync</span>
+                </div>
+              </div>
               <div className="project-info">
-                <h3>High-End Graphics Design</h3>
-                <p>Quality graphics for events and birthdays, image fixing using Photoshop and Canva.</p>
+                <div className="system-type-tag">PROCEDURAL GRAPHICS & AUDIO SYNTHESIS</div>
+                <h3>ZigZag — Procedural Kinematics Engine</h3>
+                <p>Autonomous stickman motion and choreography synthesis engine. Employs inverse kinematics and dynamic audio rhythm synchronization to procedurally generate over 5,000 algorithmic routines and interactive physics simulations.</p>
+                <div className="tech-stack-row">
+                  <span className="tech-chip">Python</span>
+                  <span className="tech-chip">Kinematics</span>
+                  <span className="tech-chip">Audio Engine</span>
+                  <span className="tech-chip">Procedural Math</span>
+                  <span className="tech-chip">JSON Schema</span>
+                </div>
+                <div className="dev-card-actions">
+                  <a href="#source-code" className="btn primary dev-btn flex-1">
+                    Get Source Code <ExternalLink size={14} />
+                  </a>
+                  <a href="https://github.com/Izyck006" target="_blank" rel="noreferrer" className="btn secondary dev-btn">
+                    Private Git
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
+              <div className="card-terminal-bar">
+                <div className="traffic-lights">
+                  <span className="dot dot-red"></span>
+                  <span className="dot dot-yellow"></span>
+                  <span className="dot dot-green"></span>
+                </div>
+                <span className="terminal-file-name">render/three_vehicle_stage.tsx</span>
+                <span className="system-status-pill status-gold">● WEBGL 60FPS</span>
+              </div>
+              <div className="project-img placeholder-tesla dev-img-wrap">
+                <div className="dev-img-overlay">
+                  <span className="hud-badge"><Gamepad2 size={12} /> Three.js / WebGL</span>
+                  <span className="hud-badge"><Zap size={12} /> Realtime Shaders</span>
+                </div>
+              </div>
+              <div className="project-info">
+                <div className="system-type-tag">3D GRAPHICS & CINEMATIC INTERACTIVE</div>
+                <h3>Tesla Cinematic Visualizer</h3>
+                <p>High-fidelity interactive 3D vehicle configurator engineered with WebGL shaders and real-time lighting. Features seamless camera orbital paths, reactive telemetry HUD, and low-latency material customization.</p>
+                <div className="tech-stack-row">
+                  <span className="tech-chip">React</span>
+                  <span className="tech-chip">Three.js</span>
+                  <span className="tech-chip">Framer Motion</span>
+                  <span className="tech-chip">GLSL</span>
+                  <span className="tech-chip">Tailwind</span>
+                </div>
+                <div className="dev-card-actions">
+                  <a href="https://tesla-alpha-seven.vercel.app" target="_blank" rel="noreferrer" className="btn primary dev-btn flex-1">
+                    Launch Demo <ExternalLink size={14} />
+                  </a>
+                  <a href="https://github.com/Izyck006/tesla" target="_blank" rel="noreferrer" className="btn secondary dev-btn">
+                    Architecture <Code size={14} />
+                  </a>
+                </div>
               </div>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Source Code Store Section */}
       <SourceCodeSection />
 
-      {/* Contact Section */}
       <section id="contact" className="relative z-10">
         <motion.h2
           className="section-title"
@@ -451,7 +618,6 @@ function App() {
         </motion.h2>
 
         <div className="contact-layout">
-          {/* Contact Details */}
           <motion.div
             className="contact-details"
             initial="hidden"
@@ -489,7 +655,6 @@ function App() {
             </div>
           </motion.div>
 
-          {/* Contact Form */}
           <motion.div
             className="contact-form-container glass"
             initial="hidden"

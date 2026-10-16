@@ -44,7 +44,6 @@
     --orb-gold: rgba(255, 204, 0, 0.1);
     --hero-shadow: rgba(255, 255, 255, 0.2);
 
-    /* Shadcn UI required vars for the skyline */
     --background: #050505;
     --foreground: #e0e0e0;
     --border: rgba(255, 255, 255, 0.08);
@@ -86,7 +85,6 @@
     --orb-gold: rgba(217, 119, 6, 0.08);
     --hero-shadow: rgba(0, 0, 0, 0.06);
 
-    /* Skyline vars for light mode */
     --background: #f8fafc;
     --foreground: #0f172a;
     --border: rgba(0, 0, 0, 0.08);
@@ -118,14 +116,14 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Typography & Titles */
 .section-title {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 3rem;
   letter-spacing: 3px;
-  color: #fff;
+  color: var(--heading-color);
   position: relative;
+  transition: color 0.3s ease;
 }
 
 .section-title::after {
@@ -144,7 +142,6 @@ section {
   padding: 100px 5% 60px;
 }
 
-/* Glassmorphism Classes */
 .glass {
   background: var(--card-bg);
   backdrop-filter: blur(12px);
@@ -159,7 +156,6 @@ section {
   border-bottom: 1px solid var(--card-border);
 }
 
-/* Buttons */
 .btn-group {
   display: flex;
   gap: 20px;
@@ -185,25 +181,26 @@ section {
 }
 
 .btn.primary {
-  background: #fff;
-  color: #050505;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
 }
 
 .btn.primary:hover {
-  background: #d4d4d4;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  background: var(--btn-primary-hover);
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.35);
   transform: translateY(-2px);
 }
 
 .btn.secondary {
   background: transparent;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
 }
 
 .btn.secondary:hover {
-  border-color: #fff;
-  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  background: var(--btn-secondary-hover);
   transform: translateY(-2px);
 }
 
@@ -219,7 +216,6 @@ section {
   transform: translateY(-2px);
 }
 
-/* Animations */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -232,7 +228,6 @@ section {
   100% { opacity: 0.5; transform: scale(1) translate(-50%, -50%); }
 }
 
-/* Glow Orbs */
 .glow-orb {
   position: absolute;
   width: 400px;
@@ -259,7 +254,6 @@ section {
   left: 20%;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -274,6 +268,5 @@ section {
   background: #555;
 }
 
-/* Utility */
 .relative { position: relative; }
 .z-10 { z-index: 10; }

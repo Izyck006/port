@@ -1,11 +1,7 @@
-/**
- * Paystack Inline Integration Utility
- */
-
 export interface PaystackConfig {
   key: string;
   email: string;
-  amount: number; // in kobo (e.g., 1500000 for 15,000 NGN)
+  amount: number;
   currency?: string;
   ref?: string;
   metadata?: Record<string, any>;
@@ -61,12 +57,7 @@ export async function initializePaystackPayment(config: PaystackConfig): Promise
   return true;
 }
 
-/**
- * Triggers instant download of the purchased file.
- * In production, this can point to a signed S3/Firebase Storage URL or direct public asset.
- */
 export function triggerInstantDownload(fileName: string, title: string) {
-  // Create an informative README package blob if remote zip isn't hosted yet
   const content = `=====================================================
 ${title}
 Source Code Archive: ${fileName}

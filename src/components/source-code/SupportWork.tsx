@@ -39,7 +39,7 @@ export const SupportWork: React.FC = () => {
       const initialized = await initializePaystackPayment({
         key: publicKey,
         email: email,
-        amount: activeAmount * 100, // in kobo
+        amount: activeAmount * 100,
         currency: 'NGN',
         metadata: {
           custom_fields: [
@@ -103,7 +103,6 @@ export const SupportWork: React.FC = () => {
         </div>
       </div>
 
-      {/* Tip Payment Modal */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="checkout-modal-backdrop" onClick={() => setIsModalOpen(false)}>

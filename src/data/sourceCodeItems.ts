@@ -5,7 +5,7 @@ export interface SourceCodeItem {
   fileName: string;
   fileSize: string;
   language: string;
-  price: number; // in NGN
+  price: number;
   currency: string;
   initialDownloads: number;
   tags: string[];
@@ -24,9 +24,10 @@ export const INITIAL_SOURCE_CODE_ITEMS: SourceCodeItem[] = [
     language: 'Python',
     price: 15000,
     currency: '₦',
-    initialDownloads: 12,
+    initialDownloads: 14,
     tags: ['Python', 'OpenCV', 'React', 'FastAPI'],
     features: ['Real-time object detection', 'Edge hardware optimizations', 'WebSocket live feed dashboard', 'Webhook alerts'],
+    demoUrl: 'https://agro-sec.vercel.app',
   },
   {
     id: 'workplace-biometrics',
@@ -37,60 +38,21 @@ export const INITIAL_SOURCE_CODE_ITEMS: SourceCodeItem[] = [
     language: 'Python',
     price: 15000,
     currency: '₦',
-    initialDownloads: 8,
+    initialDownloads: 9,
     tags: ['Python', 'PySide6', 'MongoDB', 'Biometrics'],
     features: ['USB scanner drivers', 'Automated clock-in/out logic', 'Admin reporting & export', 'Offline-first database sync'],
   },
   {
-    id: 'zic-cad-generator',
-    title: 'Parametric 3D CAD Enclosure Generator & Visualizer',
-    description: 'Full-stack parametric enclosure generation tool built with CadQuery, Flask, and WebGL Three.js real-time 3D model viewer and export.',
-    fileName: 'ZIC-Parametric-CAD.zip',
-    fileSize: '12.4 MB',
+    id: 'zizzag-app',
+    title: 'ZigZag App — Procedural Animation & Motion Choreography Engine',
+    description: 'Autonomous motion engine and dance choreography synthesis system featuring mathematical kinematics, dynamic stickman physics, audio-synced routines, and interactive catalog.',
+    fileName: 'ZigZag-App-Engine.zip',
+    fileSize: '48.5 MB',
     language: 'Python',
-    price: 10000,
-    currency: '₦',
-    initialDownloads: 15,
-    tags: ['Python', 'CadQuery', 'Flask', 'Three.js'],
-    features: ['Custom dimensions slider', 'STEP/STL instant export', 'Interactive 3D orbit viewer', 'Rest API endpoint'],
-  },
-  {
-    id: 'tesla-interactive',
-    title: 'Tesla Interactive Showcase & Vehicle Visualizer',
-    description: 'Cinematic Tesla vehicle customizer and interactive web experience featuring custom interior/exterior toggles, smooth camera sweeps, and reactive UI.',
-    fileName: 'tesla-interactive-experience.zip',
-    fileSize: '9.3 MB',
-    language: 'JavaScript',
-    price: 8000,
-    currency: '₦',
-    initialDownloads: 24,
-    tags: ['React', 'JavaScript', 'Tailwind', 'Framer Motion'],
-    features: ['Interactive color switcher', 'Responsive specs HUD', 'Glassmorphism dark aesthetics', 'Zero-latency transitions'],
-  },
-  {
-    id: 'thronecraft-game',
-    title: 'Thronecraft — Tactical Strategy Web Engine',
-    description: 'Modular browser-based strategy game engine with custom grid pathfinding, procedural turn state managers, and sprite animation rendering.',
-    fileName: 'thronecraft-engine.zip',
-    fileSize: '18.6 MB',
-    language: 'TypeScript',
-    price: 12000,
-    currency: '₦',
-    initialDownloads: 9,
-    tags: ['TypeScript', 'Canvas', 'Game Dev', 'Algorithms'],
-    features: ['Grid-based pathfinding', 'Turn-based state machine', 'Audio SFX manager', 'Modular unit classes'],
-  },
-  {
-    id: 'mysignout-fullstack',
-    title: 'Digital Commemorative Yearbook & Signout Platform',
-    description: 'Complete full-stack yearbook autograph portal featuring customer authentication, custom vanity URLs, real-time message feeds, and Paystack payments.',
-    fileName: 'MySignout-Fullstack.zip',
-    fileSize: '24.1 MB',
-    language: 'TypeScript',
     price: 15000,
     currency: '₦',
-    initialDownloads: 18,
-    tags: ['TypeScript', 'React', 'Firebase', 'Paystack'],
-    features: ['User profile generation', 'Interactive autograph board', 'Paystack subscription check', 'Real-time Firestore sync'],
+    initialDownloads: 12,
+    tags: ['Python', 'Kinematics', 'Procedural Animation', 'Audio Engine'],
+    features: ['5000+ procedural motion routines', 'Real-time choreography pipeline', 'Dynamic audio rhythm analysis', 'Interactive stickman visualizer'],
   }
 ];

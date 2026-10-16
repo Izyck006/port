@@ -11,7 +11,6 @@ export const SourceCodeSection: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedItem, setSelectedItem] = useState<SourceCodeItem | null>(null);
 
-  // Live download counts state backed by localStorage
   const [downloadCounts, setDownloadCounts] = useState<Record<string, number>>(() => {
     try {
       const saved = localStorage.getItem('isaac_source_downloads');
@@ -93,7 +92,6 @@ export const SourceCodeSection: React.FC = () => {
         </div>
       </motion.div>
 
-      {/* Grid of Source Code Cards */}
       <div className="source-grid-container">
         <AnimatePresence mode="popLayout">
           {filteredItems.length > 0 ? (
@@ -127,12 +125,10 @@ export const SourceCodeSection: React.FC = () => {
         </AnimatePresence>
       </div>
 
-      {/* Support Work Tip Jar */}
       <div className="support-work-wrapper mt-50">
         <SupportWork />
       </div>
 
-      {/* Checkout Payment Modal */}
       {selectedItem && (
         <CheckoutModal
           item={selectedItem}
