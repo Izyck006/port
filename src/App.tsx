@@ -27,6 +27,46 @@ const repoCustomDescriptions: Record<string, string> = {
   'jrsite': 'Modern responsive web portal engineered with lightweight frontend architecture.'
 };
 
+const repoCustomTitles: Record<string, string> = {
+  'workplaceattandencesystem': 'Workplace Attendance System',
+  'workplaceattendancesystem': 'Workplace Attendance System',
+  'zicmodelmakers': 'ZIC 3D CAD Maker',
+  'port': 'Interactive Engineering Portfolio',
+  'tesla': 'Tesla Vehicle Showcase',
+  'agrosec': 'AgroSec Edge AI',
+  'mysignoutpage': 'My Signout Page',
+  'thronecraft': 'Thronecraft Strategy Game',
+  'campusconnect': 'CampusConnect Platform',
+  'kpi': 'KPI Metrics Dashboard',
+  'rpg': '2D RPG Action Engine',
+  'project1': 'Food Delivery Platform',
+  'umbrellajam': 'Umbrella Jam Physics',
+  'ivydfight': 'IVY D-Fight Combat',
+  'fluke': 'Fluke Vision System',
+  'ivy': 'IVY AI Assistant',
+  'expense': 'Personal Expense Tracker',
+  'gmaee': 'Sprite Game Engine',
+  'jrsite': 'Web Portal Engine'
+};
+
+const normalizeRepoKey = (name: string): string => {
+  return (name || '').toLowerCase().replace(/[-_\s]+/g, '');
+};
+
+const getRepoDisplayName = (repo: any): string => {
+  if (!repo || !repo.name) return '';
+  const normalized = normalizeRepoKey(repo.name);
+  if (repoCustomTitles[normalized]) {
+    return repoCustomTitles[normalized];
+  }
+  return repo.name
+    .replace(/Attandence/gi, 'Attendance')
+    .replace(/[-_]+/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 const knownFrontendUrls: Record<string, string> = {
   'AgroSec': 'https://agro-sec.vercel.app',
   'tesla': 'https://tesla-alpha-seven.vercel.app',
@@ -42,10 +82,13 @@ const getProjectFrontendUrl = (repo: any): string | null => {
       return trimmed;
     }
   }
-  const match = Object.entries(knownFrontendUrls).find(
-    ([k]) => k.toLowerCase() === repo.name.toLowerCase()
-  );
-  return match ? match[1] : null;
+  const normalized = normalizeRepoKey(repo.name);
+  for (const [k, url] of Object.entries(knownFrontendUrls)) {
+    if (normalizeRepoKey(k) === normalized) {
+      return url;
+    }
+  }
+  return null;
 };
 
 function App() {
@@ -82,10 +125,9 @@ function App() {
   const githubUsername = 'Izyck006';
 
   const getRepoDescription = (repo: any) => {
-    if (repoCustomDescriptions[repo.name]) return repoCustomDescriptions[repo.name];
-    const lower = repo.name.toLowerCase();
+    const normalized = normalizeRepoKey(repo.name);
     for (const [k, v] of Object.entries(repoCustomDescriptions)) {
-      if (k.toLowerCase() === lower) return v;
+      if (normalizeRepoKey(k) === normalized) return v;
     }
     if (repo.description && repo.description.trim()) {
       return repo.description.replace(/in Rural Jigawa/gi, 'for modern agriculture');
@@ -387,7 +429,7 @@ function App() {
                       <div className="project-card-header">
                         <h3>
                           <a href={targetUrl} target="_blank" rel="noreferrer" className="repo-title-link">
-                            {repo.name}
+                            {getRepoDisplayName(repo)}
                           </a>
                         </h3>
                         {isLive && <span className="live-pill">● LIVE</span>}
@@ -428,179 +470,6 @@ function App() {
           <div className="skyline-wrapper">
             <ContributionSkyline data={contributions.length > 0 ? contributions : undefined} defaultView="2d" />
           </div>
-        </div>
-
-        <div className="handpicked-section mt-50">
-          <div className="dev-section-heading">
-            <div className="terminal-badge">
-              <Terminal size={14} />
-              <span>CORE_MODULES // ARCHITECTURES</span>
-            </div>
-            <h3 className="sub-section-title">Featured Engineering Architectures</h3>
-            <p className="dev-section-subtitle">
-              Production-grade edge vision pipelines, desktop hardware drivers, procedural kinematics, and real-time 3D web engines.
-            </p>
-          </div>
-
-          <motion.div
-            className="project-grid dev-masterpiece-grid"
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-          >
-            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
-              <div className="card-terminal-bar">
-                <div className="traffic-lights">
-                  <span className="dot dot-red"></span>
-                  <span className="dot dot-yellow"></span>
-                  <span className="dot dot-green"></span>
-                </div>
-                <span className="terminal-file-name">edge_vision/agrosec_pipeline.py</span>
-                <span className="system-status-pill status-green">● PRODUCTION</span>
-              </div>
-              <div className="project-img placeholder-1 dev-img-wrap">
-                <div className="dev-img-overlay">
-                  <span className="hud-badge"><Cpu size={12} /> YOLOv8 + OpenCV</span>
-                  <span className="hud-badge"><Zap size={12} /> Sub-50ms RTSP</span>
-                </div>
-              </div>
-              <div className="project-info">
-                <div className="system-type-tag">EDGE AI & PERIMETER MONITORING</div>
-                <h3>AgroSec — Autonomous Farmland Vision</h3>
-                <p>Distributed computer vision edge pipeline engineered for agricultural perimeter defense. Combines hardware-accelerated YOLO detection with low-latency WebSocket video streams and a telemetry control dashboard.</p>
-                <div className="tech-stack-row">
-                  <span className="tech-chip">Python</span>
-                  <span className="tech-chip">OpenCV</span>
-                  <span className="tech-chip">FastAPI</span>
-                  <span className="tech-chip">React</span>
-                  <span className="tech-chip">WebSockets</span>
-                </div>
-                <div className="dev-card-actions">
-                  <a href="https://agro-sec.vercel.app" target="_blank" rel="noreferrer" className="btn primary dev-btn flex-1">
-                    Launch Demo <ExternalLink size={14} />
-                  </a>
-                  <a href="https://github.com/Izyck006/AgroSec" target="_blank" rel="noreferrer" className="btn secondary dev-btn">
-                    Architecture <Code size={14} />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
-              <div className="card-terminal-bar">
-                <div className="traffic-lights">
-                  <span className="dot dot-red"></span>
-                  <span className="dot dot-yellow"></span>
-                  <span className="dot dot-green"></span>
-                </div>
-                <span className="terminal-file-name">drivers/biometrics_engine.py</span>
-                <span className="system-status-pill status-blue">● HARDWARE I/O</span>
-              </div>
-              <div className="project-img placeholder-biometric dev-img-wrap">
-                <div className="dev-img-overlay">
-                  <span className="hud-badge"><Shield size={12} /> 1:N Biometric Match</span>
-                  <span className="hud-badge"><Database size={12} /> Offline Sync</span>
-                </div>
-              </div>
-              <div className="project-info">
-                <div className="system-type-tag">DESKTOP GUI & HARDWARE INTEGRATION</div>
-                <h3>Biometric Workplace Attendance Engine</h3>
-                <p>High-reliability desktop verification engine built with PySide6 GUI and asynchronous USB fingerprint scanner communication. Includes automated payroll shift calculation and offline-first database synchronization.</p>
-                <div className="tech-stack-row">
-                  <span className="tech-chip">Python</span>
-                  <span className="tech-chip">PySide6</span>
-                  <span className="tech-chip">MongoDB</span>
-                  <span className="tech-chip">USB SDK</span>
-                  <span className="tech-chip">Cryptography</span>
-                </div>
-                <div className="dev-card-actions">
-                  <a href="https://github.com/Izyck006/WorkplaceAttandenceSystem" target="_blank" rel="noreferrer" className="btn primary dev-btn flex-1">
-                    Inspect Architecture <Code size={14} />
-                  </a>
-                  <a href="#source-code" className="btn secondary dev-btn">
-                    Source Code
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
-              <div className="card-terminal-bar">
-                <div className="traffic-lights">
-                  <span className="dot dot-red"></span>
-                  <span className="dot dot-yellow"></span>
-                  <span className="dot dot-green"></span>
-                </div>
-                <span className="terminal-file-name">kinematics/zigzag_synthesizer.py</span>
-                <span className="system-status-pill status-purple">● ACTIVE ENGINE</span>
-              </div>
-              <div className="project-img placeholder-zigzag dev-img-wrap">
-                <div className="dev-img-overlay">
-                  <span className="hud-badge"><Bot size={12} /> Inverse Kinematics</span>
-                  <span className="hud-badge"><Zap size={12} /> Audio Rhythm Sync</span>
-                </div>
-              </div>
-              <div className="project-info">
-                <div className="system-type-tag">PROCEDURAL GRAPHICS & AUDIO SYNTHESIS</div>
-                <h3>ZigZag — Procedural Kinematics Engine</h3>
-                <p>Autonomous stickman motion and choreography synthesis engine. Employs inverse kinematics and dynamic audio rhythm synchronization to procedurally generate over 5,000 algorithmic routines and interactive physics simulations.</p>
-                <div className="tech-stack-row">
-                  <span className="tech-chip">Python</span>
-                  <span className="tech-chip">Kinematics</span>
-                  <span className="tech-chip">Audio Engine</span>
-                  <span className="tech-chip">Procedural Math</span>
-                  <span className="tech-chip">JSON Schema</span>
-                </div>
-                <div className="dev-card-actions">
-                  <a href="#source-code" className="btn primary dev-btn flex-1">
-                    Get Source Code <ExternalLink size={14} />
-                  </a>
-                  <a href="https://github.com/Izyck006" target="_blank" rel="noreferrer" className="btn secondary dev-btn">
-                    Private Git
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div variants={fadeUp} className="project-card glass dev-system-card">
-              <div className="card-terminal-bar">
-                <div className="traffic-lights">
-                  <span className="dot dot-red"></span>
-                  <span className="dot dot-yellow"></span>
-                  <span className="dot dot-green"></span>
-                </div>
-                <span className="terminal-file-name">render/three_vehicle_stage.tsx</span>
-                <span className="system-status-pill status-gold">● WEBGL 60FPS</span>
-              </div>
-              <div className="project-img placeholder-tesla dev-img-wrap">
-                <div className="dev-img-overlay">
-                  <span className="hud-badge"><Gamepad2 size={12} /> Three.js / WebGL</span>
-                  <span className="hud-badge"><Zap size={12} /> Realtime Shaders</span>
-                </div>
-              </div>
-              <div className="project-info">
-                <div className="system-type-tag">3D GRAPHICS & CINEMATIC INTERACTIVE</div>
-                <h3>Tesla Cinematic Visualizer</h3>
-                <p>High-fidelity interactive 3D vehicle configurator engineered with WebGL shaders and real-time lighting. Features seamless camera orbital paths, reactive telemetry HUD, and low-latency material customization.</p>
-                <div className="tech-stack-row">
-                  <span className="tech-chip">React</span>
-                  <span className="tech-chip">Three.js</span>
-                  <span className="tech-chip">Framer Motion</span>
-                  <span className="tech-chip">GLSL</span>
-                  <span className="tech-chip">Tailwind</span>
-                </div>
-                <div className="dev-card-actions">
-                  <a href="https://tesla-alpha-seven.vercel.app" target="_blank" rel="noreferrer" className="btn primary dev-btn flex-1">
-                    Launch Demo <ExternalLink size={14} />
-                  </a>
-                  <a href="https://github.com/Izyck006/tesla" target="_blank" rel="noreferrer" className="btn secondary dev-btn">
-                    Architecture <Code size={14} />
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
         </div>
       </section>
 
