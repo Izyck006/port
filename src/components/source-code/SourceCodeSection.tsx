@@ -61,7 +61,7 @@ export const SourceCodeSection: React.FC = () => {
         className="section-header-wrap"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.6 }}
+        viewport={{ once: true, amount: 0.15 }}
         variants={fadeUp}
       >
         <div className="source-title-row">

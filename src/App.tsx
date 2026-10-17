@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, Send, Sun, Moon, Bot, Gamepad2, Cpu, Zap } from 'lucide-react';
+import { ExternalLink, Code, Mail, Terminal, Palette, Shield, Database, Smartphone, Send, Sun, Moon, Bot, Gamepad2, Cpu, Zap, Menu, X, Home, User, Layers, Code2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContributionSkyline from './components/ui/contribution-skyline';
 import { SourceCodeSection } from './components/source-code/SourceCodeSection';
@@ -100,6 +100,22 @@ function App() {
     const saved = localStorage.getItem('theme');
     return (saved === 'light' || saved === 'dark') ? saved : 'dark';
   });
+
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleNavClick = () => {
+    setMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     const root = document.documentElement;
@@ -232,22 +248,39 @@ function App() {
       <div className="glow-orb purple"></div>
       <div className="glow-orb gold"></div>
 
-      <nav className="glass-nav">
+      <nav className={`glass-nav ${mobileMenuOpen ? 'menu-open' : ''}`}>
         <div className="nav-content">
           <div className="nav-brand">
-            <div className="logo">ISAAC.</div>
-            <button
-              id="theme-toggle-mobile"
-              type="button"
-              onClick={toggleTheme}
-              className="theme-toggle-btn mobile-toggle"
-              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            <a href="#home" className="logo-link" onClick={handleNavClick}>
+              <span className="logo">ISAAC.</span>
+            </a>
+            
+            <div className="nav-mobile-controls">
+              <button
+                id="theme-toggle-mobile"
+                type="button"
+                onClick={toggleTheme}
+                className="theme-toggle-btn mobile-toggle"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+
+              <button
+                id="mobile-menu-toggle"
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="mobile-menu-btn"
+                aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
+                aria-expanded={mobileMenuOpen}
+              >
+                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
           </div>
-          <ul className="nav-links">
+
+          <ul className="nav-links desktop-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Arsenal</a></li>
@@ -255,6 +288,7 @@ function App() {
             <li><a href="#source-code">Source Code</a></li>
             <li><a href="#contact">Connect</a></li>
           </ul>
+
           <button
             id="theme-toggle"
             type="button"
@@ -266,6 +300,63 @@ function App() {
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
+
+        {/* Mobile Navigation Dropdown Drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              className="mobile-nav-drawer glass"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <ul className="mobile-nav-list">
+                <li>
+                  <a href="#home" onClick={handleNavClick} className="mobile-nav-item">
+                    <span className="mobile-nav-icon"><Home size={18} /></span>
+                    <span>Home</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#about" onClick={handleNavClick} className="mobile-nav-item">
+                    <span className="mobile-nav-icon"><User size={18} /></span>
+                    <span>About</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#skills" onClick={handleNavClick} className="mobile-nav-item">
+                    <span className="mobile-nav-icon"><Cpu size={18} /></span>
+                    <span>Arsenal</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#projects" onClick={handleNavClick} className="mobile-nav-item">
+                    <span className="mobile-nav-icon"><Layers size={18} /></span>
+                    <span>Drops</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#source-code" onClick={handleNavClick} className="mobile-nav-item">
+                    <span className="mobile-nav-icon"><Code2 size={18} /></span>
+                    <span>Source Code</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#contact" onClick={handleNavClick} className="mobile-nav-item">
+                    <span className="mobile-nav-icon"><Send size={18} /></span>
+                    <span>Connect</span>
+                  </a>
+                </li>
+              </ul>
+              <div className="mobile-drawer-footer">
+                <a href="#projects" onClick={handleNavClick} className="btn primary mobile-drawer-cta">
+                  View My Work
+                </a>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       <header id="home" className="relative z-10">
@@ -291,7 +382,7 @@ function App() {
           className="section-title"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.8 }}
+          viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
         >
           The Blueprint
@@ -301,7 +392,7 @@ function App() {
             className="about-text glass"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.8 }}
+            viewport={{ once: true, amount: 0.15 }}
             variants={fadeUp}
           >
             <p>
@@ -321,7 +412,7 @@ function App() {
           className="section-title"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.8 }}
+          viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
         >
           The Arsenal
@@ -401,7 +492,7 @@ function App() {
           className="section-title"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.8 }}
+          viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
         >
           Recent Drops
@@ -481,7 +572,7 @@ function App() {
           className="section-title"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.8 }}
+          viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
         >
           Let's Build

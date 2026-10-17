@@ -1113,16 +1113,20 @@ export default function ContributionSkyline({
   const hint = hints[is3d && orbit ? 1 : 0]
 
   return (
-    <section
+    <div
       ref={rootRef}
       className={"relative w-full rounded-xl p-1 font-sans " + className}
       style={{
         background: "transparent",
         color: "var(--heading-color, #ffffff)",
+        padding: 0,
       }}
     >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-        <h3 className="m-0 text-[15px] font-normal leading-snug">
+        <h3
+          className="m-0 text-[14px] sm:text-[15px] font-normal leading-snug"
+          style={{ fontFamily: "'Inter', sans-serif", textTransform: "none", letterSpacing: "normal" }}
+        >
           {title ?? (
             <>
               <span className="font-semibold tabular-nums">{nf.format(stats.total)}</span> {noun(stats.total)} in the last year
@@ -1323,6 +1327,6 @@ export default function ContributionSkyline({
       <p aria-live="polite" className="sr-only">
         {announce}
       </p>
-    </section>
+    </div>
   )
 }
