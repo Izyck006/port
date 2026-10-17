@@ -8,9 +8,9 @@ import './App.css';
 
 const repoCustomDescriptions: Record<string, string> = {
   'ZIC-model_makers': 'Parametric 3D CAD enclosure generator built with Flask, CadQuery, and interactive web visualization for rapid prototyping.',
-  'WorkplaceAttandenceSystem': 'Biometric attendance tracking system with PySide6 desktop GUI, MongoDB, and USB fingerprint scanner integration.',
-  'port': 'Personal engineering portfolio built with React, TypeScript, Framer Motion, and dynamic GitHub API integration.',
-  'tesla': 'Modern interactive Tesla showcase & vehicle visualizer with responsive UI, dynamic controls, and cinematic aesthetics.',
+  'WorkplaceAttandenceSystem': 'Biometric attendance tracking system with PySide6 desktop GUI, MongoDB and fingerprint scanner integration.',
+  'port': 'Personal portfolio built with React, TypeScript, Framer Motion, and dynamic GitHub API integration.',
+  'tesla': 'Modern interactive showcase & vehicle visualizer with responsive UI, dynamic controls, and cinematic aesthetics.',
   'AgroSec': 'Edge-driven AI intrusion detection and computer vision monitoring system for agricultural security and perimeter defense.',
   'MySignoutPage': 'Full-stack digital yearbook and commemorative sign-out platform with secure authentication and real-time messaging.',
   'Thronecraft': 'Interactive browser strategy game engine with custom mechanics, tactical grid gameplay, and procedural state management.',
@@ -31,8 +31,8 @@ const repoCustomTitles: Record<string, string> = {
   'workplaceattandencesystem': 'Workplace Attendance System',
   'workplaceattendancesystem': 'Workplace Attendance System',
   'zicmodelmakers': 'ZIC 3D CAD Maker',
-  'port': 'Interactive Engineering Portfolio',
-  'tesla': 'Tesla Vehicle Showcase',
+  'port': 'Portfolio',
+  'tesla': 'Vehicle Showcase',
   'agrosec': 'AgroSec Edge AI',
   'mysignoutpage': 'My Signout Page',
   'thronecraft': 'Thronecraft Strategy Game',
@@ -364,6 +364,7 @@ function App() {
             <p>2D/3D Mechanics, Physics Simulation & Interactive Engines.</p>
             <div className="skill-tags">
               <span className="skill-tag"><Code size={12} className="mr-1" /> C#</span>
+              <span className="skill-tag"><Code size={12} className="mr-1" /> Python</span>
               <span className="skill-tag"><Gamepad2 size={12} className="mr-1" /> Unity</span>
               <span className="skill-tag"><Code size={12} className="mr-1" /> JavaScript</span>
               <span className="skill-tag">Pygame</span>

@@ -15,20 +15,20 @@ export interface SourceCodeItem {
 }
 
 export const INITIAL_SOURCE_CODE_ITEMS: SourceCodeItem[] = [
-  {
-    id: 'agrosec-ai',
-    title: 'AgroSec — Edge AI Intrusion Detection & Vision System',
-    description: 'Complete edge-computing computer vision pipeline for perimeter monitoring, animal detection, and real-time alerts with React telemetry dashboard.',
-    fileName: 'AgroSec-Vision-Pipeline.zip',
-    fileSize: '65.8 MB',
-    language: 'Python',
-    price: 15000,
-    currency: '₦',
-    initialDownloads: 14,
-    tags: ['Python', 'OpenCV', 'React', 'FastAPI'],
-    features: ['Real-time object detection', 'Edge hardware optimizations', 'WebSocket live feed dashboard', 'Webhook alerts'],
-    demoUrl: 'https://agro-sec.vercel.app',
-  },
+  /*  {
+      id: 'agrosec-ai',
+      title: 'AgroSec — Edge AI Intrusion Detection & Vision System',
+      description: 'Complete edge-computing computer vision pipeline for perimeter monitoring, animal detection, and real-time alerts with React telemetry dashboard.',
+      fileName: 'AgroSec-Vision-Pipeline.zip',
+      fileSize: '65.8 MB',
+      language: 'Python',
+      price: 15000,
+      currency: '₦',
+      initialDownloads: 5,
+      tags: ['Python', 'OpenCV', 'React', 'FastAPI'],
+      features: ['Real-time object detection', 'Edge hardware optimizations', 'WebSocket live feed dashboard', 'Webhook alerts'],
+      demoUrl: 'https://agro-sec.vercel.app',
+    },*/
   {
     id: 'workplace-biometrics',
     title: 'Biometric Workplace Attendance Engine & Desktop GUI',
@@ -38,7 +38,7 @@ export const INITIAL_SOURCE_CODE_ITEMS: SourceCodeItem[] = [
     language: 'Python',
     price: 15000,
     currency: '₦',
-    initialDownloads: 9,
+    initialDownloads: 3,
     tags: ['Python', 'PySide6', 'MongoDB', 'Biometrics'],
     features: ['USB scanner drivers', 'Automated clock-in/out logic', 'Admin reporting & export', 'Offline-first database sync'],
   },
